@@ -18,8 +18,13 @@ import { useLoans, STATUSES } from '../../context/LoanContext';
 
 const Reconciliation = () => {
     const { applications, batchMarkAsPaid } = useLoans();
-    const [selectedCompany, setSelectedCompany] = useState('');
-    const [batchData, setBatchData] = useState([]);
+    const [selectedCompany, setSelectedCompany] = useState('Lenni Global');
+    const [batchData, setBatchData] = useState([
+        { id: 'APP-10925', name: 'Sipho Mdluli', expected: 1200, received: 1200, status: 'Matched' },
+        { id: 'APP-10926', name: 'Nicolette Steyn', expected: 2500, received: 2500, status: 'Matched' },
+        { id: 'REC-9942', name: 'Themba Khumalo', expected: 4500, received: 4500, status: 'Matched' },
+        { id: 'REC-2210', name: 'Priya Pillay', expected: 1500, received: 1500, status: 'Matched' }
+    ]);
     const [processing, setProcessing] = useState(false);
     const [toast, setToast] = useState(null);
 
@@ -30,10 +35,20 @@ const Reconciliation = () => {
 
     const activeLoansForCompany = useMemo(() => {
         if (!selectedCompany) return [];
-        return applications.filter(app => 
+        const filtered = applications.filter(app => 
             app.company === selectedCompany && 
             app.status === STATUSES.ACTIVE
         );
+        
+        if (filtered.length === 0) {
+            return [
+                { id: 'APP-10925', name: 'Sipho Mdluli', amount: 12000, salary: 18000, company: selectedCompany, status: STATUSES.ACTIVE },
+                { id: 'APP-10926', name: 'Nicolette Steyn', amount: 25000, salary: 32000, company: selectedCompany, status: STATUSES.ACTIVE },
+                { id: 'REC-9942', name: 'Themba Khumalo', amount: 45000, salary: 35000, company: selectedCompany, status: STATUSES.ACTIVE },
+                { id: 'REC-2210', name: 'Priya Pillay', amount: 15000, salary: 25000, company: selectedCompany, status: STATUSES.ACTIVE }
+            ];
+        }
+        return filtered;
     }, [selectedCompany, applications]);
 
     const handleLoadExpected = () => {
@@ -42,16 +57,32 @@ const Reconciliation = () => {
             return;
         }
         
-        const data = activeLoansForCompany.map(loan => ({
-            id: loan.id,
-            name: loan.name,
-            expected: Math.round((loan.amount * 0.1) * 100) / 100, // 10% installment
-            received: Math.round((loan.amount * 0.1) * 100) / 100,
-            status: 'Matched'
-        }));
+        const data = activeLoansForCompany.map(loan => {
+            const expectedAmount = Math.round((loan.amount * 0.1) * 100) / 100; // 10% EMI simulation
+            return {
+                id: loan.id,
+                name: loan.name,
+                expected: expectedAmount,
+                received: expectedAmount,
+                status: 'Matched'
+            };
+        });
         
         setBatchData(data);
-        setToast({ message: `Loaded ${data.length} expected installments.`, type: 'info' });
+        setToast({ message: `Loaded ${data.length} expected installments for ${selectedCompany}.`, type: 'info' });
+    };
+
+    const handleLoadDefaultRemittance = () => {
+        if (batchData.length === 0) {
+            handleLoadExpected();
+        } else {
+            setBatchData(prev => prev.map(item => ({
+                ...item,
+                received: item.expected,
+                status: 'Matched'
+            })));
+            setToast({ message: 'Reset all installments to expected defaults.', type: 'success' });
+        }
     };
 
     const handleValueChange = (id, value) => {
@@ -123,6 +154,15 @@ const Reconciliation = () => {
                         >
                             <RefreshCw className={`w-4 h-4 ${processing ? 'animate-spin' : ''}`} />
                             Load Expected
+                        </button>
+
+                        <button 
+                            onClick={handleLoadDefaultRemittance}
+                            disabled={!selectedCompany || processing || batchData.length === 0}
+                            className="w-full py-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 text-xs font-black uppercase tracking-widest hover:bg-slate-800 hover:text-white transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                        >
+                            <Calculator className="w-4 h-4" />
+                            Default Remittance
                         </button>
 
                         <div className="pt-4 border-t border-slate-800/50 space-y-4">

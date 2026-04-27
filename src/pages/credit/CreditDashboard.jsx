@@ -1,18 +1,18 @@
 import React, { useMemo, useState } from 'react';
-import { 
-  ShieldCheck, 
-  AlertTriangle, 
-  AlertCircle,
-  TrendingUp, 
-  Search,
-  CheckCircle2,
-  XCircle,
-  FileSearch,
-  BarChart3,
-  ArrowRight,
-  UserCheck,
-  Zap,
-  Activity
+import {
+    ShieldCheck,
+    AlertTriangle,
+    AlertCircle,
+    TrendingUp,
+    Search,
+    CheckCircle2,
+    XCircle,
+    FileSearch,
+    BarChart3,
+    ArrowRight,
+    UserCheck,
+    Zap,
+    Activity
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { StatCard, SectionHeader, Badge } from '../../components/ui/Shared';
@@ -25,27 +25,27 @@ const CreditDashboard = () => {
 
     const pendingCount = applications.filter(a => a.status === STATUSES.CREDIT_PENDING || a.status === STATUSES.HR_APPROVED).length;
     const highRiskCount = applications.filter(a => a.risk === 'High' && a.status === STATUSES.CREDIT_PENDING).length;
-    const approvedToday = applications.filter(a => a.status === STATUSES.APPROVED && new Date(a.date).toDateString() === new Date().toDateString()).length || 12; 
+    const approvedToday = applications.filter(a => a.status === STATUSES.APPROVED && new Date(a.date).toDateString() === new Date().toDateString()).length || 12;
 
     const stats = [
-        { 
-            title: 'In Queue', 
-            value: pendingCount.toString(), 
-            icon: FileSearch, 
+        {
+            title: 'In Queue',
+            value: pendingCount.toString(),
+            icon: FileSearch,
             variant: 'primary',
-            onClick: () => navigate('/credit/queue', { state: { status: 'All' }})
+            onClick: () => navigate('/credit/queue', { state: { status: 'All' } })
         },
-        { 
-            title: 'High Risk', 
-            value: highRiskCount.toString(), 
-            icon: AlertTriangle, 
+        {
+            title: 'High Risk',
+            value: highRiskCount.toString(),
+            icon: AlertTriangle,
             variant: 'danger',
-            onClick: () => navigate('/credit/queue', { state: { risk: 'High' }}) 
+            onClick: () => navigate('/credit/queue', { state: { risk: 'High' } })
         },
-        { 
-            title: 'Approved Today', 
-            value: approvedToday.toString(), 
-            icon: ShieldCheck, 
+        {
+            title: 'Approved Today',
+            value: approvedToday.toString(),
+            icon: ShieldCheck,
             variant: 'success',
             onClick: () => navigate('/credit/history')
         },
@@ -58,7 +58,7 @@ const CreditDashboard = () => {
             STATUSES.HR_APPROVED,
             STATUSES.UNDER_REVIEW,
         ];
-        
+
         const filtered = applications
             .filter(
                 (a) =>
@@ -89,7 +89,7 @@ const CreditDashboard = () => {
                 description="Analyze risk profiles and manage high-priority assessment velocity."
                 actions={(
                     <div className="flex items-center gap-3">
-                        <button 
+                        <button
                             onClick={() => navigate('/credit/queue')}
                             className="btn-primary flex items-center gap-2 group"
                         >
@@ -125,7 +125,7 @@ const CreditDashboard = () => {
                                         onChange={(e) => setPrioritySearch(e.target.value)}
                                     />
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => navigate('/credit/queue')}
                                     className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
                                 >
@@ -180,7 +180,7 @@ const CreditDashboard = () => {
                                                     </Badge>
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <button 
+                                                    <button
                                                         onClick={() => navigate(`/credit/profile/${app.id}`)}
                                                         className="px-4 py-2 rounded-xl bg-blue-600/10 text-blue-400 text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-lg text-center"
                                                     >
@@ -213,7 +213,7 @@ const CreditDashboard = () => {
                             <p className="text-slate-500 text-sm">Average turnaround time for credit decisions: <span className="text-blue-400 font-bold">4.2 hours</span></p>
                             <button
                                 onClick={() => navigate('/credit/history')}
-                                className="px-4 py-2 bg-slate-800 rounded-xl text-xs font-bold hover:bg-slate-700 transition-all text-center"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-500 transition-all text-center shadow-md shadow-blue-500/20"
                             >
                                 Performance Report
                             </button>

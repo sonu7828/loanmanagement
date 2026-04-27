@@ -51,7 +51,7 @@ export const StatCard = ({ title, value, subValue, icon: Icon, trend, variant = 
   const config = variants[variant] || variants.primary;
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className={cn(
         "relative group glass p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] overflow-hidden border border-slate-800/50 transition-all duration-500 min-w-0",
@@ -73,12 +73,12 @@ export const StatCard = ({ title, value, subValue, icon: Icon, trend, variant = 
           )}>
             <Icon className="w-5 h-5" />
           </div>
-          
+
           {trend && (
             <div className={cn(
               "px-2 py-0.5 rounded-full text-[10px] font-black border uppercase tracking-widest",
-              trend.type === 'up' 
-                ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+              trend.type === 'up'
+                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                 : "bg-red-50 text-red-600 border-red-100"
             )}>
               {trend.type === 'up' ? '↑' : '↓'} {trend.value}%
@@ -92,7 +92,7 @@ export const StatCard = ({ title, value, subValue, icon: Icon, trend, variant = 
             {title}
           </p>
           <div className="flex flex-col">
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-slate-200 leading-none py-1 break-words">
+            <h3 className="text-2xl sm:text-3xl font-display font-bold text-slate-100 leading-none py-1 break-words">
               {value}
             </h3>
             {subValue && (
@@ -111,7 +111,7 @@ export const SectionHeader = ({ title, description, actions }) => (
   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6 min-w-0">
     <div className="space-y-1.5 min-w-0">
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold tracking-tight text-slate-100 break-words">{title}</h1>
-      {description && <p className="text-slate-300 text-sm sm:text-base font-medium max-w-3xl">{description}</p>}
+      {description && <p className="text-slate-500 text-sm sm:text-base font-medium max-w-3xl">{description}</p>}
     </div>
     {actions && <div className="flex flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 w-full lg:w-auto">{actions}</div>}
   </div>
@@ -124,52 +124,52 @@ export const Toast = ({ message, type = 'success', onClose }) => {
   }, [onClose]);
 
   const variants = {
-    success: 'bg-white text-slate-800 border-emerald-100 shadow-emerald-500/10',
-    danger: 'bg-white text-slate-800 border-red-100 shadow-red-500/10',
-    info: 'bg-white text-slate-800 border-blue-100 shadow-blue-500/10',
+    success: 'bg-slate-950 text-slate-100 border-slate-800 shadow-2xl shadow-slate-950/50',
+    danger: 'bg-slate-950 text-slate-100 border-slate-800 shadow-2xl shadow-slate-950/50',
+    info: 'bg-slate-950 text-slate-100 border-slate-800 shadow-2xl shadow-slate-950/50',
   };
 
   return (
     <div className={cn(
-      "fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-md lg:bottom-8 lg:right-8 z-[300] px-4 sm:px-6 py-4 rounded-[24px] border shadow-2xl animate-in slide-in-from-right-20 duration-500 flex items-center gap-4 min-w-0",
+      "fixed bottom-4 right-4 left-4 sm:left-auto sm:max-w-md lg:bottom-8 lg:right-8 z-[300] px-6 py-4 rounded-[24px] border animate-in slide-in-from-right-20 duration-500 flex items-center gap-4 min-w-0",
       variants[type]
     )}>
-      <div className={cn("p-2 rounded-xl", 
-        type === 'success' ? 'bg-emerald-50 text-emerald-600' :
-        type === 'danger' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'
+      <div className={cn("p-2 rounded-xl",
+        type === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
+          type === 'danger' ? 'bg-red-500/10 text-red-400' : 'bg-blue-500/10 text-blue-400'
       )}>
         {type === 'success' && <CheckCircle2 className="w-5 h-5" />}
         {type === 'danger' && <XCircle className="w-5 h-5" />}
         {type === 'info' && <Info className="w-5 h-5" />}
       </div>
-      <span className="font-bold text-sm tracking-tight min-w-0 break-words">{message}</span>
+      <span className="font-bold text-sm tracking-tight min-w-0 break-words text-slate-200">{message}</span>
     </div>
   );
 };
 
 export const ApplicationTable = ({ data, columns, onRowClick }) => (
-    <div className="glass rounded-[20px] sm:rounded-[32px] overflow-hidden border-slate-800/50 min-w-0 max-w-full">
-        <div className="overflow-x-auto overscroll-x-contain -mx-px">
-            <table className="w-full text-left min-w-0">
-                <thead>
-                    <tr className="bg-slate-900/50 border-b border-slate-800/50">
-                        {columns.map((col, i) => (
-                            <th key={i} className="px-4 py-3 sm:px-6 sm:py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] whitespace-nowrap">{col.header}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/50">
-                    {data.map((row, i) => (
-                        <tr key={i} onClick={() => onRowClick?.(row)} className="hover:bg-slate-900/50 transition-all cursor-pointer group">
-                             {columns.map((col, j) => (
-                                <td key={j} className="px-4 py-3 sm:px-6 sm:py-4 align-top min-w-0">
-                                    {col.render ? col.render(row) : <span className="text-sm font-bold text-slate-200 break-words">{row[col.key]}</span>}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+  <div className="glass rounded-[20px] sm:rounded-[32px] overflow-hidden border-slate-800/50 min-w-0 max-w-full">
+    <div className="overflow-x-auto overscroll-x-contain -mx-px">
+      <table className="w-full text-left min-w-0">
+        <thead>
+          <tr className="bg-slate-900/50 border-b border-slate-800/50">
+            {columns.map((col, i) => (
+              <th key={i} className="px-4 py-3 sm:px-6 sm:py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] whitespace-nowrap">{col.header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-800/50">
+          {data.map((row, i) => (
+            <tr key={i} onClick={() => onRowClick?.(row)} className="hover:bg-slate-900/50 transition-all cursor-pointer group">
+              {columns.map((col, j) => (
+                <td key={j} className="px-4 py-3 sm:px-6 sm:py-4 align-top min-w-0">
+                  {col.render ? col.render(row) : <span className="text-sm font-bold text-slate-100 break-words">{row[col.key]}</span>}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
+  </div>
 );

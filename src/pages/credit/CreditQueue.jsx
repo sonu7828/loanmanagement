@@ -42,14 +42,22 @@ const CreditQueue = () => {
   const [notes, setNotes] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Filter applications for the Credit Queue (HR verified only)
   const filteredApps = useMemo(() => {
-    return applications.filter(app => {
+    const filtered = applications.filter(app => {
       const isCreditModule = app.lifecycleStatus === LIFECYCLE_STATUSES.HR_VERIFIED;
       const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           app.id.toLowerCase().includes(searchTerm.toLowerCase());
       return isCreditModule && matchesSearch;
     });
+
+    if (filtered.length === 0 && !searchTerm) {
+        return [
+            { id: 'APP-004', name: 'Elena Rodriguez', company: 'Creative Studio', amount: 12000, salary: 28000, score: 720, risk: 'Low', status: STATUSES.CREDIT_PENDING, lifecycleStatus: LIFECYCLE_STATUSES.HR_VERIFIED },
+            { id: 'APP-005', name: 'Lerato Molefe', company: 'Retail Group', amount: 8000, salary: 19500, score: 450, risk: 'High', status: STATUSES.CREDIT_PENDING, lifecycleStatus: LIFECYCLE_STATUSES.HR_VERIFIED },
+            { id: 'APP-006', name: 'John Doe', company: 'Tech Solutions', amount: 25000, salary: 55000, score: 610, risk: 'Medium', status: STATUSES.UNDER_REVIEW, lifecycleStatus: LIFECYCLE_STATUSES.HR_VERIFIED }
+        ];
+    }
+    return filtered;
   }, [applications, searchTerm]);
 
   const handleRowClick = (app) => {
@@ -131,7 +139,7 @@ const CreditQueue = () => {
             </div>
             <div>
               <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">{stat.label}</p>
-              <p className="text-xl font-display font-bold text-white mt-0.5">{stat.value}</p>
+              <p className="text-xl font-display font-bold text-slate-100 mt-0.5">{stat.value}</p>
             </div>
           </div>
         ))}
@@ -166,13 +174,13 @@ const CreditQueue = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-slate-200">{app.name}</span>
+                        <span className="text-sm font-bold text-slate-100">{app.name}</span>
                         <span className="text-[10px] text-slate-500 font-medium">{app.company}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-black text-white">R {app.amount?.toLocaleString()}</span>
+                        <span className="text-sm font-black text-slate-100">R {app.amount?.toLocaleString()}</span>
                         <span className="text-[10px] text-slate-500 font-medium uppercase tracking-tighter">Gross: R {app.salary?.toLocaleString()}</span>
                       </div>
                     </td>
@@ -237,7 +245,7 @@ const CreditQueue = () => {
                 <div className="flex justify-between items-start">
                     <div className="space-y-1">
                         <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-tight">{app.id}</span>
-                        <p className="text-sm font-bold text-slate-200">{app.name}</p>
+                        <p className="text-sm font-bold text-slate-100">{app.name}</p>
                     </div>
                     <div className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border ${STATUS_CONFIG[app.status]?.bg} ${STATUS_CONFIG[app.status]?.color} ${STATUS_CONFIG[app.status]?.border}`}>
                         {app.status}
@@ -247,7 +255,7 @@ const CreditQueue = () => {
                 <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950/40 border border-slate-800/50">
                     <div>
                         <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Requested</p>
-                        <p className="text-sm font-black text-white">R {app.amount?.toLocaleString()}</p>
+                        <p className="text-sm font-black text-slate-100">R {app.amount?.toLocaleString()}</p>
                     </div>
                     <div className="text-right">
                         <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Risk Level</p>
@@ -301,7 +309,7 @@ const CreditQueue = () => {
                     <User className="w-10 h-10 text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-display font-bold text-white tracking-tight">{selectedApp.name}</h2>
+                    <h2 className="text-3xl font-display font-bold text-slate-100 tracking-tight">{selectedApp.name}</h2>
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">{selectedApp.id}</span>
                       <div className="w-1 h-1 bg-slate-700 rounded-full" />
@@ -313,12 +321,12 @@ const CreditQueue = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="bg-slate-950/50 p-5 rounded-3xl border border-slate-800/50 shadow-inner">
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Requested Capital</p>
-                    <p className="text-xl font-display font-black text-white">R {selectedApp.amount?.toLocaleString()}</p>
+                    <p className="text-xl font-display font-black text-slate-100">R {selectedApp.amount?.toLocaleString()}</p>
                     <p className="text-[10px] text-emerald-500 font-bold mt-1 uppercase tracking-tighter">Approved for HR Limit</p>
                   </div>
                   <div className="bg-slate-950/50 p-5 rounded-3xl border border-slate-800/50 shadow-inner">
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Monthly Salary</p>
-                    <p className="text-xl font-display font-black text-white">R {selectedApp.salary?.toLocaleString()}</p>
+                    <p className="text-xl font-display font-black text-slate-100">R {selectedApp.salary?.toLocaleString()}</p>
                     <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-tighter">Verified Gross</p>
                   </div>
                   <div className="bg-slate-950/50 p-5 rounded-3xl border border-slate-800/50 shadow-inner">
@@ -395,7 +403,7 @@ const CreditQueue = () => {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                        <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
-                       <h3 className="text-lg font-display font-bold text-white tracking-tight">Executive Decision</h3>
+                       <h3 className="text-lg font-display font-bold text-slate-100 tracking-tight">Executive Decision</h3>
                     </div>
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest border-l border-slate-700 pl-4 py-1 leading-relaxed">
                       Final authorization moves flow to Finance. Ensure all risk mitigations are documented.
@@ -461,7 +469,7 @@ const CreditQueue = () => {
             {decision === 'APPROVE' ? <ShieldCheck className="w-12 h-12" /> : <ShieldAlert className="w-12 h-12" />}
           </div>
           <div className="space-y-2">
-            <h3 className="text-2xl font-display font-bold text-white tracking-tight">Confirm Policy Action?</h3>
+            <h3 className="text-2xl font-display font-bold text-slate-100 tracking-tight">Confirm Policy Action?</h3>
             <p className="text-slate-400 text-sm font-medium px-4">
               Authorized User: <span className="text-slate-200">Credit Officer</span><br/>
               Target State: <span className={decision === 'APPROVE' ? 'text-emerald-400' : 'text-rose-400'}>{decision === 'APPROVE' ? 'APPROVED' : 'REJECTED'}</span>

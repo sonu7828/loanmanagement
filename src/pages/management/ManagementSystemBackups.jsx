@@ -42,49 +42,49 @@ const ManagementSystemBackups = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Primary Backup Controls */}
-                <div className="lg:col-span-2 glass p-10 rounded-[56px] border border-slate-800/50 space-y-10 shadow-2xl relative overflow-hidden bg-slate-900/10">
+                <div className="lg:col-span-2 glass p-10 rounded-[56px] border border-slate-200 space-y-10 shadow-2xl relative overflow-hidden bg-white">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/5 blur-[120px] -mr-40 -mt-40" />
-                    
+
                     <div className="flex items-center justify-between relative z-10">
                         <div className="space-y-1">
-                            <h3 className="text-2xl font-display font-black text-white italic uppercase tracking-tight">Persistence Management</h3>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Encrypted Data Archival Control</p>
+                            <h3 className="text-2xl font-display font-black !text-black italic uppercase tracking-tight">Persistence Management</h3>
+                            <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Encrypted Data Archival Control</p>
                         </div>
                         <Badge variant="success">System Healthy</Badge>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                        <div className="p-8 bg-slate-950 border border-slate-800 rounded-[40px] space-y-6 group hover:border-blue-500/30 transition-all shadow-xl">
+                        <div className="p-8 bg-white border border-slate-200 rounded-[40px] space-y-6 group hover:border-blue-500/30 transition-all shadow-xl">
                             <div className="flex items-center justify-between">
-                                <div className="p-4 bg-blue-600/10 rounded-2xl text-blue-400 group-hover:scale-110 transition-transform">
+                                <div className="p-4 bg-blue-600/10 rounded-2xl text-blue-600 group-hover:scale-110 transition-transform">
                                     <Download className="w-6 h-6" />
                                 </div>
                                 <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest italic">Local Archive</span>
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-lg font-bold text-white">Download Local Copy</h4>
-                                <p className="text-xs text-slate-500 leading-relaxed">Extract full SQL database and document attachments in encrypted ZIP format.</p>
+                                <h4 className="text-lg font-bold !text-black">Download Local Copy</h4>
+                                <p className="text-xs !text-black font-semibold leading-relaxed">Extract full SQL database and document attachments in encrypted ZIP format.</p>
                             </div>
                             <button 
                                 onClick={() => handleAction('Local Backup')}
                                 disabled={processing}
-                                className="w-full py-4 bg-slate-800 hover:bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3"
+                                className="w-full py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg shadow-blue-600/20 hover:scale-[1.02]"
                             >
                                 {processing === 'Local Backup' ? <RefreshCw className="w-4 h-4 animate-spin" /> : <HardDrive className="w-4 h-4" />}
                                 Generate Backup
                             </button>
                         </div>
 
-                        <div className="p-8 bg-slate-950 border border-slate-800 rounded-[40px] space-y-6 group hover:border-emerald-500/30 transition-all shadow-xl">
+                        <div className="p-8 bg-white border border-slate-200 rounded-[40px] space-y-6 group hover:border-emerald-500/30 transition-all shadow-xl">
                             <div className="flex items-center justify-between">
-                                <div className="p-4 bg-emerald-600/10 rounded-2xl text-emerald-400 group-hover:scale-110 transition-transform">
+                                <div className="p-4 bg-emerald-600/10 rounded-2xl text-emerald-600 group-hover:scale-110 transition-transform">
                                     <Cloud className="w-6 h-6" />
                                 </div>
                                 <Badge variant="success">Live Sync</Badge>
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-lg font-bold text-white">Cloud Synchronization</h4>
-                                <p className="text-xs text-slate-500 leading-relaxed">Trigger manual synchronization with off-site Azure Blob encrypted storage.</p>
+                                <h4 className="text-lg font-bold !text-black">Cloud Synchronization</h4>
+                                <p className="text-xs !text-black font-semibold leading-relaxed">Trigger manual synchronization with off-site Azure Blob encrypted storage.</p>
                             </div>
                             <button 
                                 onClick={() => handleAction('Cloud Sync')}
@@ -99,37 +99,37 @@ const ManagementSystemBackups = () => {
 
                     <div className="p-6 bg-blue-600/5 border border-blue-500/10 rounded-[32px] flex items-center justify-between relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-blue-500">
+                            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-blue-600">
                                 <ShieldCheck className="w-5 h-5" />
                             </div>
                             <div className="space-y-0.5">
-                                <p className="text-xs font-bold text-slate-200 uppercase tracking-tight italic">256-Bit AES Encryption</p>
+                                <p className="text-xs font-bold !text-black uppercase tracking-tight italic">256-Bit AES Encryption</p>
                                 <p className="text-[10px] text-slate-600 font-bold uppercase">Compliance: SOC2 / ISO 27001 Ready</p>
                             </div>
                         </div>
-                        <button className="text-[10px] font-black text-blue-400 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
-                            Security Audit <ExternalLink className="w-4 h-4" />
+                        <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors flex items-center gap-2">
+                            Security Audit <ExternalLink className="w-4 h-4 text-blue-600" />
                         </button>
                     </div>
                 </div>
 
                 {/* Backup History Sidebar */}
-                <div className="glass p-10 rounded-[56px] border border-slate-800/50 space-y-10 shadow-2xl bg-slate-950/40 flex flex-col">
+                <div className="glass p-10 rounded-[56px] border border-slate-200 space-y-10 shadow-2xl bg-white flex flex-col">
                     <div className="space-y-1">
-                        <h3 className="text-2xl font-display font-black text-white italic uppercase tracking-tight">Audit History</h3>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Recent Persistence Events</p>
+                        <h3 className="text-2xl font-display font-black !text-black italic uppercase tracking-tight">Audit History</h3>
+                        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Recent Persistence Events</p>
                     </div>
 
                     <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar max-h-[500px]">
                         {backupHistory.map((item, i) => (
-                            <div key={i} className="p-6 bg-slate-950 rounded-[32px] border border-slate-900 group hover:border-slate-800 transition-all flex items-center justify-between">
+                            <div key={i} className="p-6 bg-white rounded-[32px] border border-slate-200 group hover:border-slate-300 transition-all flex items-center justify-between shadow-sm">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-600">
-                                        <Clock className="w-5 h-5" />
+                                    <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-600">
+                                        <Clock className="w-5 h-5 text-slate-600" />
                                     </div>
                                     <div className="space-y-0.5">
-                                        <p className="text-[10px] font-black text-slate-200 uppercase tracking-tight italic">{item.date}</p>
-                                        <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">{item.type} • {item.size}</p>
+                                        <p className="text-[10px] font-black !text-black uppercase tracking-tight italic">{item.date}</p>
+                                        <p className="text-[9px] !text-black font-semibold uppercase tracking-widest">{item.type} • {item.size}</p>
                                     </div>
                                 </div>
                                 <Badge variant="success">OK</Badge>
@@ -138,11 +138,15 @@ const ManagementSystemBackups = () => {
                     </div>
 
                     <div className="pt-8 space-y-4">
-                        <div className="flex items-center gap-3 p-4 bg-slate-950 rounded-2xl border border-slate-900 text-slate-500">
-                            <Lock className="w-4 h-4" />
-                            <p className="text-[10px] font-black uppercase tracking-widest">Auto-Backup: Every 24h</p>
+                        <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-slate-700">
+                            <Lock className="w-4 h-4 text-slate-700" />
+                            <p className="text-[10px] font-black !text-black uppercase tracking-widest">Auto-Backup: Every 24h</p>
                         </div>
-                        <button className="w-full py-5 rounded-[28px] border border-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] hover:text-white hover:border-slate-700 transition-all flex items-center justify-center gap-3">
+                        <button 
+                            onClick={() => handleAction('Log Export')}
+                            className="w-full py-5 bg-white border border-slate-300 !text-black rounded-[28px] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-md hover:border-slate-400"
+                        >
+                            {processing === 'Log Export' ? <RefreshCw className="w-4 h-4 animate-spin text-black" /> : <History className="w-4 h-4 text-black" />}
                             View Full History Log
                         </button>
                     </div>

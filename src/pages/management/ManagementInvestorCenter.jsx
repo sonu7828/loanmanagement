@@ -50,12 +50,12 @@ const ManagementInvestorCenter = () => {
                 title="Investor Intelligence Center"
                 description="Consolidated portfolio performance and equity growth analytics for board-level reporting."
                 actions={
-                    <button 
+                    <button
                         onClick={() => setToast({ message: 'Generating investor presentation PDF...', type: 'info' })}
-                        className="px-8 py-4 bg-white text-slate-900 rounded-[24px] text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
+                        className="px-8 py-4 bg-white !text-black border border-slate-300 rounded-[24px] text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-2xl flex items-center gap-3"
                     >
-                        <FileText className="w-4 h-4" />
-                        Investor Presentation
+                        <FileText className="w-4 h-4 !text-black" />
+                        <span className="!text-black">Investor Presentation</span>
                     </button>
                 }
             />
@@ -72,8 +72,8 @@ const ManagementInvestorCenter = () => {
                             </span>
                         </div>
                         <div>
-                            <p className="text-3xl font-display font-black text-white italic tracking-tighter">{m.value}</p>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1">{m.title}</p>
+                            <p className="text-3xl font-display font-black !text-black italic tracking-tighter">{m.value}</p>
+                            <p className="text-[10px] font-black !text-slate-600 uppercase tracking-[0.2em] mt-1">{m.title}</p>
                         </div>
                     </div>
                 ))}
@@ -83,16 +83,16 @@ const ManagementInvestorCenter = () => {
                 {/* Growth Chart */}
                 <div className="lg:col-span-2 glass p-10 rounded-[56px] border border-slate-800/50 space-y-10 shadow-2xl relative overflow-hidden bg-slate-900/10">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/5 blur-[120px] -mr-40 -mt-40" />
-                    
+
                     <div className="flex items-center justify-between relative z-10">
                         <div className="space-y-1">
-                            <h3 className="text-2xl font-display font-black text-white italic uppercase tracking-tight">Equitized Portfolio Growth</h3>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">12-Month Performance Index</p>
+                            <h3 className="text-2xl font-display font-black !text-black italic uppercase tracking-tight">Equitized Portfolio Growth</h3>
+                            <p className="text-[10px] font-black !text-slate-600 uppercase tracking-[0.2em]">12-Month Performance Index</p>
                         </div>
                         <div className="flex items-center gap-6">
                             <div className="text-right">
-                                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Growth Rate</p>
-                                <p className="text-lg font-black text-emerald-400">18.4% YoY</p>
+                                <p className="text-[10px] font-black !text-slate-600 uppercase tracking-widest">Growth Rate</p>
+                                <p className="text-lg font-black !text-emerald-600">18.4% YoY</p>
                             </div>
                             <div className="p-4 bg-slate-950 rounded-[20px] border border-slate-800">
                                 <TrendingUp className="w-5 h-5 text-blue-500" />
@@ -111,10 +111,10 @@ const ManagementInvestorCenter = () => {
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                                 <XAxis dataKey="name" stroke="#64748b" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} />
-                                <YAxis stroke="#64748b" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} tickFormatter={(v) => `R${(v/1000000).toFixed(1)}M`} />
+                                <YAxis stroke="#64748b" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} tickFormatter={(v) => `R${(v / 1000000).toFixed(1)}M`} />
                                 <Tooltip
                                     contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '32px', border: '1px solid rgba(59,130,246,0.3)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
-                                    formatter={(v) => [`R ${(v/1000).toFixed(0)}k`, 'Portfolio Value']}
+                                    formatter={(v) => [`R ${(v / 1000).toFixed(0)}k`, 'Portfolio Value']}
                                 />
                                 <Area type="monotone" dataKey="amount" stroke="#3b82f6" fillOpacity={1} fill="url(#colorInvestor)" strokeWidth={5} />
                             </AreaChart>
@@ -125,8 +125,8 @@ const ManagementInvestorCenter = () => {
                 {/* Portfolio Summary Card */}
                 <div className="glass p-10 rounded-[56px] border border-slate-800/50 space-y-10 shadow-2xl bg-blue-600/5 flex flex-col">
                     <div className="space-y-1">
-                        <h3 className="text-2xl font-display font-black text-white italic uppercase tracking-tight">Board Summary</h3>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Q2 2026 Executive Brief</p>
+                        <h3 className="text-2xl font-display font-black !text-black italic uppercase tracking-tight">Board Summary</h3>
+                        <p className="text-[10px] font-black !text-slate-600 uppercase tracking-[0.2em]">Q2 2026 Executive Brief</p>
                     </div>
 
                     <div className="space-y-8 flex-grow">
@@ -135,10 +135,10 @@ const ManagementInvestorCenter = () => {
                             { label: 'Portfolio Health', value: '98.2%', sub: 'In Good Standing' },
                             { label: 'Operational Margin', value: '42.1%', sub: 'Lean efficiency' }
                         ].map((item, i) => (
-                            <div key={i} className="flex items-center justify-between p-6 rounded-[32px] bg-slate-950 border border-slate-800/50 group hover:border-blue-500/50 transition-all">
+                            <div key={i} className="flex items-center justify-between p-6 rounded-[32px] bg-white border border-slate-200 group hover:border-blue-500/50 transition-all shadow-sm">
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">{item.label}</p>
-                                    <p className="text-xl font-black text-white">{item.value}</p>
+                                    <p className="text-[10px] font-black !text-slate-600 uppercase tracking-widest">{item.label}</p>
+                                    <p className="text-xl font-black !text-black">{item.value}</p>
                                 </div>
                                 <div className="text-right">
                                     <Badge variant="success">{item.sub}</Badge>

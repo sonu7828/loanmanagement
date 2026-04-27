@@ -18,7 +18,16 @@ import { cn } from '../../lib/utils';
 const NewLoansReport = () => {
     const { applications } = useLoans();
     const [selectedCompany, setSelectedCompany] = useState('ALL');
-    const [dateRange, setDateRange] = useState('2024-04');
+    // Default to current week (Mon-Fri) dynamically
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 4); // Friday
+    
+    const [startDate, setStartDate] = useState(startOfWeek.toISOString().split('T')[0]);
+    const [endDate, setEndDate] = useState(endOfWeek.toISOString().split('T')[0]);
+    
     const [isExporting, setIsExporting] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [toast, setToast] = useState(null);
@@ -35,9 +44,20 @@ const NewLoansReport = () => {
             const matchesCompany = selectedCompany === 'ALL' || app.company === selectedCompany;
             // For demo, we consider anything disbursed as "New" in this report if matches period
             const isDisbursed = app.status === STATUSES.DISBURSED || app.status === STATUSES.ACTIVE;
-            return matchesCompany && isDisbursed;
+            
+            // Check date match (Weekly Range)
+            const appDateObj = new Date(app.disbursedAt || app.date);
+            const appTimestamp = appDateObj.getTime();
+            
+            const startTimestamp = startDate ? new Date(startDate).getTime() : 0;
+            // Add 24 hours to include the entire end day
+            const endTimestamp = endDate ? new Date(endDate).getTime() + 86400000 : Infinity;
+
+            const matchesDate = appTimestamp >= startTimestamp && appTimestamp <= endTimestamp;
+
+            return matchesCompany && isDisbursed && matchesDate;
         });
-    }, [applications, selectedCompany]);
+    }, [applications, selectedCompany, startDate, endDate]);
 
     const totalPayout = newLoans.reduce((sum, loan) => sum + loan.amount, 0);
 
@@ -98,14 +118,25 @@ const NewLoansReport = () => {
                             {companies.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
-                    <div className="md:w-64 space-y-1.5">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Payout Period</label>
-                        <input 
-                            type="month"
-                            value={dateRange}
-                            onChange={(e) => setDateRange(e.target.value)}
-                            className="w-full bg-slate-900 border border-slate-800 rounded-xl px-5 py-3 text-sm text-slate-200 font-bold focus:outline-none focus:border-blue-500 transition-all"
-                        />
+                    <div className="md:w-auto flex flex-col sm:flex-row gap-4">
+                        <div className="space-y-1.5 flex-1">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Start Date (Week)</label>
+                            <input 
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 font-bold focus:outline-none focus:border-blue-500 transition-all"
+                            />
+                        </div>
+                        <div className="space-y-1.5 flex-1">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">End Date (Week)</label>
+                            <input 
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 font-bold focus:outline-none focus:border-blue-500 transition-all"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

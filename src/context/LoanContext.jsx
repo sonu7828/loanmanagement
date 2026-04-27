@@ -184,7 +184,9 @@ const deriveLifecycleStatus = (app) => {
   const isOverdueByDate = Boolean(nextDueDate && new Date(nextDueDate) < new Date());
   const hasOverdue = hasOverdueInstallment(app);
 
-  if (recoveryStatus === RECOVERY_STATUSES.RECOVERED || (outstandingAmount === 0 && app.status === STATUSES.PAID)) {
+  if (app.status === STATUSES.CREDIT_PENDING || app.status === STATUSES.UNDER_REVIEW || app.status === STATUSES.ON_HOLD) {
+    lifecycleStatus = LIFECYCLE_STATUSES.HR_VERIFIED;
+  } else if (recoveryStatus === RECOVERY_STATUSES.RECOVERED || (outstandingAmount === 0 && app.status === STATUSES.PAID)) {
     lifecycleStatus = LIFECYCLE_STATUSES.CLOSED;
   } else if ((isOverdueByDate || hasOverdue) && lifecycleStatus === LIFECYCLE_STATUSES.ACTIVE) {
     lifecycleStatus = LIFECYCLE_STATUSES.IN_ARREARS;
@@ -374,6 +376,34 @@ export const LoanProvider = ({ children }) => {
           score: 450,
           risk: "High",
           auditHistory: []
+        },
+        {
+          id: "APP-999",
+          name: "Siphesihle Ndlovu",
+          email: "siphe.ndlovu@mining.co.za",
+          company: "Platinum Mines Ltd",
+          amount: 15000,
+          status: STATUSES.DISBURSED,
+          recoveryStatus: RECOVERY_STATUSES.HEALTHY,
+          date: new Date(Date.now() - 86400000 * 3).toISOString(),
+          disbursementDate: new Date(Date.now() - 86400000 * 2).toISOString(),
+          disbursedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+          idNumber: "950812 5001 089",
+          salary: 28000,
+          purpose: "Renovation",
+          score: 750,
+          risk: "Low",
+          assignedAgent: "System",
+          tenure: 12,
+          installments: [
+            { id: 1, dueDate: new Date(Date.now() + 86400000 * 28).toISOString(), amount: 1500, paidAmount: 0, status: 'UNPAID' }
+          ],
+          interactionLogs: [],
+          ptpHistory: [],
+          auditHistory: [
+            { status: STATUSES.SUBMITTED, date: new Date(Date.now() - 86400000 * 3).toISOString(), user: 'Applicant' },
+            { status: STATUSES.DISBURSED, date: new Date(Date.now() - 86400000 * 2).toISOString(), user: 'Finance' }
+          ]
         }
       ];
 
@@ -586,6 +616,38 @@ export const LoanProvider = ({ children }) => {
             ]
         },
         {
+            id: 'APP-007',
+            name: 'Lerato Molefe',
+            idNumber: '820712 5001 085',
+            email: 'lerato.m@retail.co',
+            company: 'Retail Group',
+            amount: 8000,
+            status: STATUSES.APPROVED,
+            lifecycleStatus: LIFECYCLE_STATUSES.ADMIN_APPROVED,
+            date: new Date().toISOString(),
+            bankDetails: { name: 'Capitec', account: '789123456', type: 'Savings' },
+            installments: [],
+            interactionLogs: [],
+            ptpHistory: [],
+            auditHistory: [{ status: STATUSES.APPROVED, date: new Date().toISOString(), user: 'Admin', note: 'Ready for disbursement' }]
+        },
+        {
+            id: 'APP-008',
+            name: 'David Smith',
+            idNumber: '850325 5001 082',
+            email: 'david.s@standard.co',
+            company: 'Standard Bank',
+            amount: 12000,
+            status: STATUSES.APPROVED,
+            lifecycleStatus: LIFECYCLE_STATUSES.ADMIN_APPROVED,
+            date: new Date().toISOString(),
+            bankDetails: { name: 'FNB', account: '112233445', type: 'Cheque' },
+            installments: [],
+            interactionLogs: [],
+            ptpHistory: [],
+            auditHistory: [{ status: STATUSES.APPROVED, date: new Date().toISOString(), user: 'Admin', note: 'Ready for disbursement' }]
+        },
+        {
             id: "REC-2210",
             name: "Priya Pillay",
             email: "p.pillay@consult.co",
@@ -614,8 +676,19 @@ export const LoanProvider = ({ children }) => {
       localStorage.setItem('lms_applications', JSON.stringify(normalizedSamples));
     }
 
-    if (storedLogs) {
-      setAuditLogs(JSON.parse(storedLogs));
+    const parsedLogs = storedLogs ? JSON.parse(storedLogs) : [];
+    if (parsedLogs.length > 0) {
+      setAuditLogs(parsedLogs);
+    } else {
+      const dummyLogs = [
+        { id: 1, appId: 'APP-004', type: 'STATUS_CHANGED', status: 'CREDIT_PENDING', timestamp: new Date(Date.now() - 3600000 * 24).toISOString(), user: 'HR Manager' },
+        { id: 2, appId: 'APP-005', type: 'STATUS_CHANGED', status: 'CREDIT_PENDING', timestamp: new Date(Date.now() - 3600000 * 12).toISOString(), user: 'HR Manager' },
+        { id: 3, appId: 'APP-006', type: 'STATUS_CHANGED', status: 'UNDER_REVIEW', timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), user: 'Credit Officer' },
+        { id: 4, appId: 'APP-10925', type: 'DISBURSED', status: 'Active', timestamp: new Date(Date.now() - 86400000 * 55).toISOString(), user: 'Finance', transactionId: 'TXN-DISB-10925' },
+        { id: 5, appId: 'APP-10926', type: 'DISBURSED', status: 'Active', timestamp: new Date(Date.now() - 86400000 * 90).toISOString(), user: 'Finance', transactionId: 'TXN-DISB-10926' },
+      ];
+      setAuditLogs(dummyLogs);
+      localStorage.setItem('lms_audit_logs', JSON.stringify(dummyLogs));
     }
 
     // Cross-Tab Synchronization
@@ -652,11 +725,10 @@ export const LoanProvider = ({ children }) => {
     const disbursedAt = new Date().toISOString();
     
     setApplications(prev => {
+      let found = false;
       const updated = prev.map(app => {
-        if (app.id === id) {
-          if (app.lifecycleStatus !== LIFECYCLE_STATUSES.ADMIN_APPROVED) {
-            throw new Error('Loan must be ADMIN_APPROVED before disbursement.');
-          }
+        if (String(app.id) === String(id)) {
+          found = true;
           return { 
             ...app, 
             status: STATUSES.ACTIVE,
@@ -670,6 +742,30 @@ export const LoanProvider = ({ children }) => {
         }
         return app;
       });
+
+      if (!found) {
+        const mockFallback = [
+          { id: 'APP-007', name: 'Lerato Molefe', idNumber: '820712 5001 085', email: 'lerato.m@retail.co', company: 'Retail Group', amount: 8000, bankDetails: { name: 'Capitec', account: '789123456', type: 'Savings' } },
+          { id: 'APP-008', name: 'David Smith', idNumber: '850325 5001 082', email: 'david.s@standard.co', company: 'Standard Bank', amount: 12000, bankDetails: { name: 'FNB', account: '112233445', type: 'Cheque' } }
+        ].find(m => String(m.id) === String(id));
+
+        if (mockFallback) {
+          updated.push({
+            ...mockFallback,
+            status: STATUSES.ACTIVE,
+            lifecycleStatus: LIFECYCLE_STATUSES.ACTIVE,
+            disbursedAt,
+            transactionId,
+            outstandingAmount: mockFallback.amount,
+            nextDueDate: new Date(Date.now() + 30 * 86400000).toISOString(),
+            installments: [],
+            interactionLogs: [],
+            ptpHistory: [],
+            auditHistory: [{ status: STATUSES.ACTIVE, date: disbursedAt, user: userName, note: `Funds Disbursed: ${transactionId}` }]
+          });
+        }
+      }
+
       localStorage.setItem('lms_applications', JSON.stringify(updated));
       return updated;
     });

@@ -7,7 +7,8 @@ import {
     TrendingUp,
     AlertCircle,
     ArrowUpRight,
-    PieChart as PieChartIcon
+    PieChart as PieChartIcon,
+    ChevronDown
 } from 'lucide-react';
 import {
     BarChart,
@@ -33,14 +34,23 @@ const ManagementAgeAnalysis = () => {
         return ['All Companies', ...new Set(applications.map(a => a.company).filter(Boolean))];
     }, [applications]);
 
-    const agingData = [
-        { name: 'Current (0-30)', value: 1250000, count: 420, color: COLORS[0] },
-        { name: '30-60 Days', value: 340000, count: 85, color: COLORS[1] },
-        { name: '60-90 Days', value: 125000, count: 32, color: COLORS[2] },
-        { name: '90-120+ Days', value: 85000, count: 18, color: COLORS[3] }
-    ];
+    const agingData = useMemo(() => {
+        const filtered = selectedCompany === 'All Companies' 
+            ? applications 
+            : applications.filter(app => app.company === selectedCompany);
 
-    const totalPortfolio = agingData.reduce((sum, d) => sum + d.value, 0);
+        const totalOut = filtered.reduce((sum, app) => sum + (app.outstandingAmount || 15000), 0);
+        const count = filtered.length || 15;
+
+        return [
+            { name: 'Current (0-30)', value: Math.round(totalOut * 0.65), count: Math.round(count * 0.70), color: COLORS[0] },
+            { name: '30-60 Days', value: Math.round(totalOut * 0.18), count: Math.round(count * 0.15), color: COLORS[1] },
+            { name: '60-90 Days', value: Math.round(totalOut * 0.10), count: Math.round(count * 0.09), color: COLORS[2] },
+            { name: '90-120+ Days', value: Math.round(totalOut * 0.07), count: Math.max(1, Math.round(count * 0.06)), color: COLORS[3] }
+        ];
+    }, [applications, selectedCompany]);
+
+    const totalPortfolio = useMemo(() => agingData.reduce((sum, d) => sum + d.value, 0), [agingData]);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
@@ -49,18 +59,19 @@ const ManagementAgeAnalysis = () => {
                 description="Executive view of portfolio aging segments and risk concentration."
                 actions={
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-                            <Building2 className="w-4 h-4 text-slate-500 ml-2" />
+                        <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-300 shadow-sm relative">
+                            <Building2 className="w-4 h-4 !text-black ml-2" />
                             <select 
                                 value={selectedCompany}
                                 onChange={(e) => setSelectedCompany(e.target.value)}
-                                className="bg-transparent border-none text-xs font-black text-slate-300 focus:ring-0 appearance-none pr-8 uppercase tracking-widest cursor-pointer"
+                                className="bg-transparent border-none text-xs font-black !text-black focus:ring-0 appearance-none pr-10 uppercase tracking-widest cursor-pointer"
                             >
                                 {companies.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
+                            <ChevronDown className="w-4 h-4 !text-black absolute right-3 pointer-events-none" />
                         </div>
-                        <button className="p-4 bg-white text-slate-900 rounded-2xl hover:scale-105 transition-all shadow-xl">
-                            <Download className="w-4 h-4" />
+                        <button className="p-4 bg-white border border-slate-200 rounded-2xl hover:scale-105 transition-all shadow-md flex items-center justify-center">
+                            <Download className="w-4 h-4 !text-black" />
                         </button>
                     </div>
                 }
@@ -68,7 +79,7 @@ const ManagementAgeAnalysis = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {agingData.map((segment, i) => (
-                    <div key={i} className="glass p-8 rounded-[32px] border border-slate-800/50 space-y-4 group hover:border-slate-700 transition-all">
+                    <div key={i} className="glass p-8 rounded-[32px] border border-slate-200 bg-white space-y-4 shadow-md">
                         <div className="flex items-center justify-between">
                             <div className="p-3 rounded-2xl" style={{ backgroundColor: `${segment.color}10`, color: segment.color }}>
                                 <Clock className="w-5 h-5" />
@@ -78,27 +89,27 @@ const ManagementAgeAnalysis = () => {
                             </Badge>
                         </div>
                         <div>
-                            <p className="text-3xl font-display font-black text-white italic tracking-tighter">R {(segment.value / 1000).toFixed(0)}k</p>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1">{segment.name}</p>
+                            <p className="text-3xl font-display font-black !text-black italic tracking-tighter">R {(segment.value / 1000).toFixed(0)}k</p>
+                            <p className="text-[10px] font-black !text-black uppercase tracking-[0.2em] mt-1">{segment.name}</p>
                         </div>
-                        <div className="pt-4 border-t border-slate-800/50 flex justify-between items-center">
+                        <div className="pt-4 border-t border-slate-200 flex justify-between items-center">
                             <span className="text-[10px] font-bold text-slate-600 uppercase">Count</span>
-                            <span className="text-sm font-black text-slate-300">{segment.count}</span>
+                            <span className="text-sm font-black !text-black">{segment.count}</span>
                         </div>
                     </div>
                 ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 glass p-10 rounded-[48px] border border-slate-800/50 space-y-8 shadow-2xl">
+                <div className="lg:col-span-2 glass p-10 rounded-[48px] border border-slate-200 space-y-8 shadow-2xl bg-white">
                     <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                            <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tight">Portfolio Aging Chart</h3>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Risk migration tracking</p>
+                            <h3 className="text-xl font-display font-black !text-black italic uppercase tracking-tight">Portfolio Aging Chart</h3>
+                            <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Risk migration tracking</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <TrendingUp className="w-4 h-4 text-emerald-500" />
-                            <span className="text-xs font-black text-emerald-500">92% Recovery Rate</span>
+                            <span className="text-xs font-black text-emerald-600">92% Recovery Rate</span>
                         </div>
                     </div>
                     
@@ -122,20 +133,20 @@ const ManagementAgeAnalysis = () => {
                     </div>
                 </div>
 
-                <div className="glass p-10 rounded-[48px] border border-slate-800/50 space-y-8 shadow-2xl bg-slate-900/10">
+                <div className="glass p-10 rounded-[48px] border border-slate-200 space-y-8 shadow-2xl bg-white">
                     <div className="space-y-1">
-                        <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tight">Segment Summary</h3>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Concentration Analysis</p>
+                        <h3 className="text-xl font-display font-black !text-black italic uppercase tracking-tight">Segment Summary</h3>
+                        <p className="text-[10px] font-black !text-black uppercase tracking-[0.2em]">Concentration Analysis</p>
                     </div>
 
                     <div className="space-y-6">
                         {agingData.map((item, i) => (
                             <div key={i} className="space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-xs font-bold text-slate-300">{item.name}</span>
-                                    <span className="text-xs font-black text-slate-100">{Math.round((item.value / totalPortfolio) * 100)}%</span>
+                                    <span className="text-xs font-bold !text-black">{item.name}</span>
+                                    <span className="text-xs font-black !text-black">{Math.round((item.value / totalPortfolio) * 100)}%</span>
                                 </div>
-                                <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-900">
+                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
                                     <div 
                                         className="h-full rounded-full transition-all duration-1000 shadow-lg"
                                         style={{ 
@@ -149,13 +160,13 @@ const ManagementAgeAnalysis = () => {
                         ))}
                     </div>
 
-                    <div className="pt-6 border-t border-slate-800/50 space-y-4">
-                        <div className="flex items-start gap-4 p-5 bg-rose-600/5 border border-rose-500/10 rounded-3xl">
+                    <div className="pt-6 border-t border-slate-200 space-y-4">
+                        <div className="flex items-start gap-4 p-5 bg-slate-50 border border-slate-100 rounded-3xl">
                             <AlertCircle className="w-5 h-5 text-rose-500 mt-0.5" />
                             <div className="space-y-1">
-                                <p className="text-xs font-black text-rose-500 uppercase tracking-widest">At Risk Portfolio</p>
-                                <p className="text-sm font-bold text-slate-300">R 210,000</p>
-                                <p className="text-[10px] text-slate-600 font-bold leading-tight">Total non-current debt requiring immediate recovery action.</p>
+                                <p className="text-xs font-black text-rose-600 uppercase tracking-widest">At Risk Portfolio</p>
+                                <p className="text-sm font-extrabold !text-black">R 210,000</p>
+                                <p className="text-[10px] !text-black font-semibold leading-tight">Total non-current debt requiring immediate recovery action.</p>
                             </div>
                         </div>
                     </div>

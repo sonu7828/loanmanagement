@@ -239,7 +239,7 @@ const Profile = () => {
                             <div className="space-y-2 text-center md:text-left flex-1">
                                 <h4 className="text-xl font-black text-slate-200 uppercase tracking-tight">Request Data Removal</h4>
                                 <p className="text-sm text-slate-400 font-bold leading-relaxed max-w-xl">
-                                    Submit a request for personal data removal. Requests are reviewed subject to active loans, legal retention periods, and compliance policies.
+                                    Submit a formal request for personal data removal. Requests are reviewed based on account status, legal retention periods (5 years post-settlement), and active credit obligations.
                                 </p>
                             </div>
                             <button
@@ -251,9 +251,9 @@ const Profile = () => {
                         </div>
 
                         <div className="w-full pt-8 border-t border-slate-800/50 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                            <PolicyNote text="Requests may be approved or declined" />
+                            <PolicyNote text="Requests may be approved or declined on merit" />
                             <PolicyNote text="Active loans cannot be removed" />
-                            <PolicyNote text="Records retained up to 5 years after settlement" />
+                            <PolicyNote text="Records retained for 5 years after settlement" />
                         </div>
                     </div>
                 </div>

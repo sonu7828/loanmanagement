@@ -3,6 +3,7 @@ import {
   buildConfirmationLetter,
   buildPaidUpLetter,
   buildSettlementLetter,
+  buildRejectionLetter,
 } from './templates';
 import { getLetterEligibility, getOutstandingAmount, LETTER_TYPES } from './rules';
 

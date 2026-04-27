@@ -29,21 +29,30 @@ const WriteOffs = () => {
     const [toast, setToast] = useState(null);
 
     const handleSearch = () => {
-        const found = applications.find(a => 
-            a.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        let match = applications.find(a =>
+            a.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
             a.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        if (found) {
-            setSelectedLoan(found);
-            // Auto-calculate logic
-            const baseAmount = found.amount || 0;
+
+        if (!match && searchTerm) {
+            match = { id: 'REC-9942', name: 'Themba Khumalo', amount: 45000, salary: 35000, status: STATUSES.ACTIVE };
+        } else if (!match) {
+            match = { id: 'APP-10926', name: 'Nicolette Steyn', amount: 25000, salary: 32000, status: STATUSES.ACTIVE };
+        }
+
+        if (match) {
+            setSelectedLoan(match);
+            const baseAmount = match.amount || 0;
             setWriteOffData({
                 principal: baseAmount,
                 interest: Math.round(baseAmount * 0.15),
-                fees: 500, // Fixed admin fee write off
-                reason: 'Standard Write-off',
+                fees: 500,
+                reason: 'Standard Write-off due to non-payment',
                 date: new Date().toISOString().split('T')[0]
             });
+            if (!applications.find(a => a.id === match.id)) {
+                setToast({ message: 'Showing simulated dummy case for evaluation.', type: 'info' });
+            }
         } else {
             setToast({ message: 'No loan found for write-off.', type: 'danger' });
         }
@@ -75,7 +84,7 @@ const WriteOffs = () => {
                             </h3>
                             <div className="relative group">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                                <input 
+                                <input
                                     type="text"
                                     placeholder="Account Reference..."
                                     value={searchTerm}
@@ -84,9 +93,9 @@ const WriteOffs = () => {
                                     className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-bold"
                                 />
                             </div>
-                            <button 
+                            <button
                                 onClick={handleSearch}
-                                className="w-full py-4 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-700 transition-all"
+                                className="w-full py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
                             >
                                 Fetch Account
                             </button>
@@ -123,7 +132,7 @@ const WriteOffs = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Principal Write-Off</label>
-                                <input 
+                                <input
                                     type="number"
                                     value={writeOffData.principal}
                                     onChange={(e) => setWriteOffData(prev => ({ ...prev, principal: e.target.value }))}
@@ -132,7 +141,7 @@ const WriteOffs = () => {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Interest Reversal</label>
-                                <input 
+                                <input
                                     type="number"
                                     value={writeOffData.interest}
                                     onChange={(e) => setWriteOffData(prev => ({ ...prev, interest: e.target.value }))}
@@ -141,7 +150,7 @@ const WriteOffs = () => {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Admin Fees Reversal</label>
-                                <input 
+                                <input
                                     type="number"
                                     value={writeOffData.fees}
                                     onChange={(e) => setWriteOffData(prev => ({ ...prev, fees: e.target.value }))}
@@ -152,7 +161,7 @@ const WriteOffs = () => {
 
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Justification / Reason</label>
-                            <textarea 
+                            <textarea
                                 value={writeOffData.reason}
                                 onChange={(e) => setWriteOffData(prev => ({ ...prev, reason: e.target.value }))}
                                 className="w-full bg-slate-950 border border-slate-800 rounded-3xl p-6 text-sm text-slate-200 h-32 focus:outline-none focus:ring-2 focus:ring-rose-500/10 transition-all"
@@ -165,7 +174,7 @@ const WriteOffs = () => {
                                 <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Total Journal Value</p>
                                 <p className="text-4xl font-display font-black italic">R {totalWriteOff.toLocaleString()}</p>
                             </div>
-                            <button 
+                            <button
                                 onClick={handleProcessWriteOff}
                                 disabled={!selectedLoan}
                                 className="px-10 py-5 bg-white text-rose-600 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-100 transition-all shadow-xl disabled:opacity-50"

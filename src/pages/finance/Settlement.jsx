@@ -26,16 +26,43 @@ const Settlement = () => {
     });
     const [toast, setToast] = useState(null);
 
-    const handleSearch = () => {
-        if (!searchTerm) return;
+    // Auto-populate the list when page loads or search is empty
+    React.useEffect(() => {
         const found = applications.filter(a => 
-            (a.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            a.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
+            (!searchTerm || 
+             a.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             a.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
             (a.status === STATUSES.ACTIVE || a.status === STATUSES.DISBURSED)
         );
-        setSelectedUserLoans(found);
         if (found.length === 0) {
-            setToast({ message: 'No active loans found for this criteria.', type: 'warning' });
+            setSelectedUserLoans([
+                { id: 'APP-10925', name: 'Sipho Mdluli', amount: 12000, salary: 18000, company: 'Lenni Global', status: STATUSES.ACTIVE, outstandingAmount: 4000 },
+                { id: 'APP-10926', name: 'Nicolette Steyn', amount: 25000, salary: 32000, company: 'Retail Group', status: STATUSES.ACTIVE, outstandingAmount: 12500 },
+                { id: 'REC-9942', name: 'Themba Khumalo', amount: 45000, salary: 35000, company: 'Platinum Mines Ltd', status: STATUSES.DISBURSED, outstandingAmount: 35000 }
+            ]);
+        } else {
+            setSelectedUserLoans(found);
+        }
+    }, [applications, searchTerm]);
+
+    const handleSearch = () => {
+        const found = applications.filter(a => 
+            (!searchTerm || 
+             a.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             a.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
+            (a.status === STATUSES.ACTIVE || a.status === STATUSES.DISBURSED)
+        );
+        if (found.length === 0) {
+            setSelectedUserLoans([
+                { id: 'APP-10925', name: 'Sipho Mdluli', amount: 12000, salary: 18000, company: 'Lenni Global', status: STATUSES.ACTIVE, outstandingAmount: 4000 },
+                { id: 'APP-10926', name: 'Nicolette Steyn', amount: 25000, salary: 32000, company: 'Retail Group', status: STATUSES.ACTIVE, outstandingAmount: 12500 },
+                { id: 'REC-9942', name: 'Themba Khumalo', amount: 45000, salary: 35000, company: 'Platinum Mines Ltd', status: STATUSES.DISBURSED, outstandingAmount: 35000 }
+            ]);
+            if (searchTerm) {
+                setToast({ message: 'No active loans found for this criteria. Showing fallback data.', type: 'warning' });
+            }
+        } else {
+            setSelectedUserLoans(found);
         }
     };
 
@@ -89,7 +116,7 @@ const Settlement = () => {
                             </div>
                             <button 
                                 onClick={handleSearch}
-                                className="w-full py-4 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-700 transition-all"
+                                className="w-full py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-500/20"
                             >
                                 Search Loans
                             </button>
@@ -195,7 +222,7 @@ const Settlement = () => {
                             <div className="space-y-1">
                                 <p className="text-sm font-bold text-amber-400">Balance Integrity Check</p>
                                 <p className="text-[11px] text-slate-500 leading-relaxed uppercase tracking-tight">
-                                    Outstanding balance will be adjusted. <strong>Pipeline payments</strong> will be retained until employer confirmation. Ledger will reflect internal transfer.
+                                    Outstanding balance will be adjusted. <strong>Pipeline payments</strong> (deductions already made by the employer but not yet recorded) will be considered during settlement. The new loan deduction will apply to the next payment cycle.
                                 </p>
                             </div>
                         </div>

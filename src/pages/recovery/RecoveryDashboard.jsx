@@ -11,7 +11,8 @@ import {
   Search,
   Phone,
   User,
-  AlertCircle
+  AlertCircle,
+  ChevronDown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLoans, RECOVERY_STATUSES, LIFECYCLE_STATUSES } from '../../context/LoanContext';
@@ -158,21 +159,21 @@ const RecoveryDashboard = () => {
             <div className="space-y-8 pb-32 overflow-x-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {toast && <Toast {...toast} onClose={() => setToast(null)} />}
                 
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 glass p-6 rounded-[32px] border border-slate-800/50 shadow-xl no-print">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 glass p-6 rounded-[32px] border border-slate-200 shadow-xl bg-white no-print">
                     <div className="space-y-1">
-                        <h1 className="text-2xl font-display font-black text-white tracking-tight italic uppercase">Recovery Control</h1>
-                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Global Arrears & Collections Lifecycle</p>
+                        <h1 className="text-2xl font-display font-black !text-black tracking-tight italic uppercase">Recovery Control</h1>
+                        <p className="text-xs !text-black font-bold uppercase tracking-widest">Global Arrears & Collections Lifecycle</p>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex items-center gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-                            <div className="p-2 bg-rose-600/10 rounded-xl text-rose-400">
+                        <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-300 shadow-sm relative">
+                            <div className="p-2 bg-rose-600/10 rounded-xl text-rose-600">
                                 <Calendar className="w-4 h-4" />
                             </div>
                             <select 
                                 value={dateRange}
                                 onChange={(e) => setDateRange(e.target.value)}
-                                className="bg-transparent border-none text-xs font-black text-slate-300 focus:ring-0 appearance-none pr-8 uppercase tracking-widest cursor-pointer"
+                                className="bg-transparent border-none text-xs font-black !text-black focus:ring-0 appearance-none pr-10 uppercase tracking-widest cursor-pointer"
                             >
                                 <option value="today">Today</option>
                                 <option value="week">This Week</option>
@@ -181,10 +182,11 @@ const RecoveryDashboard = () => {
                                 <option value="year">FY 2026</option>
                                 <option value="custom">Custom Range</option>
                             </select>
+                            <ChevronDown className="w-4 h-4 !text-black absolute right-3 pointer-events-none" />
                         </div>
 
-                        <button className="p-4 bg-white text-slate-900 rounded-2xl hover:scale-105 transition-all shadow-xl">
-                            <History className="w-4 h-4" />
+                        <button className="p-4 bg-white border border-slate-200 text-slate-900 rounded-2xl hover:scale-105 transition-all shadow-md flex items-center justify-center">
+                            <History className="w-4 h-4 !text-black" />
                         </button>
                     </div>
                 </div>
@@ -228,7 +230,7 @@ const RecoveryDashboard = () => {
                                 </div>
                                 <button 
                                     onClick={() => navigate('/recovery/list')}
-                                    className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] hover:text-white transition-all flex items-center gap-1 group"
+                                    className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] hover:!text-blue-800 transition-all flex items-center gap-1 group"
                                 >
                                     View All
                                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

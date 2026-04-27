@@ -44,94 +44,181 @@ const GlobalSearch = () => {
 
     // Prepare searchable data
     const allSearchableData = useMemo(() => {
-        const employeeApps = applications.filter(app => app.email === user?.email);
-        
-        // 1. Applications
-        const apps = employeeApps.map(app => ({
-            id: app.id,
-            title: `Loan Application ${app.id}`,
-            subtitle: `${app.company} • ${app.purpose}`,
-            status: app.status,
-            amount: `R ${app.amount?.toLocaleString()}`,
-            date: new Date(app.date).toLocaleDateString(),
-            category: 'Applications',
-            path: `/employee/status`, // Navigate to status page or specific view
-            searchable: `${app.id} ${app.status} ${app.amount} ${app.date} ${app.purpose} ${app.company}`.toLowerCase()
-        }));
+        const data = [];
+        const role = user?.role?.toLowerCase() || 'employee';
 
-        // 2. Statements / Transactions
-        const txs = employeeApps.flatMap(app => {
-            const t = [];
-            if (app.transactionId) {
-                t.push({
-                    id: app.transactionId,
-                    title: `Disbursement: ${app.transactionId}`,
-                    subtitle: `Reference: ${app.id}`,
-                    status: 'Completed',
-                    amount: `+ R ${app.amount?.toLocaleString()}`,
+        if (role === 'employee') {
+            // Pages
+            data.push(
+                { id: 'emp-apply', title: 'Apply Loan', subtitle: 'Initiate a new loan request', category: 'Pages', path: '/employee/apply', searchable: 'apply loan initiate request' },
+                { id: 'emp-status', title: 'My Status', subtitle: 'Check application updates', category: 'Pages', path: '/employee/status', searchable: 'my status check application updates' },
+                { id: 'emp-statements', title: 'Statements', subtitle: 'Review payout & repayments', category: 'Pages', path: '/employee/statements', searchable: 'statements payout repayment transaction history' },
+                { id: 'emp-docs', title: 'Letters & Documents', subtitle: 'Access official certificates', category: 'Pages', path: '/employee/documents', searchable: 'letters documents official certificates payslip id' },
+                { id: 'emp-profile', title: 'Profile', subtitle: 'Personal credentials', category: 'Pages', path: '/employee/profile', searchable: 'profile personal credentials details account' }
+            );
+
+            // Applications
+            const employeeApps = applications.filter(app => app.email === user?.email);
+            employeeApps.forEach(app => {
+                data.push({
+                    id: app.id,
+                    title: `Loan Application ${app.id}`,
+                    subtitle: `${app.company} • ${app.purpose}`,
+                    status: app.status,
+                    amount: `R ${app.amount?.toLocaleString()}`,
+                    date: new Date(app.date).toLocaleDateString(),
+                    category: 'Applications',
+                    path: `/employee/status`,
+                    searchable: `${app.id} ${app.status} ${app.amount} ${app.date} ${app.purpose} ${app.company}`.toLowerCase()
+                });
+
+                if (app.transactionId) {
+                    data.push({
+                        id: `tx-${app.transactionId}`,
+                        title: `Disbursement: ${app.transactionId}`,
+                        subtitle: `Reference: ${app.id}`,
+                        status: 'Completed',
+                        amount: `+ R ${app.amount?.toLocaleString()}`,
+                        date: new Date(app.disbursedAt || app.date).toLocaleDateString(),
+                        category: 'Statements',
+                        path: '/employee/statements',
+                        searchable: `${app.transactionId} disbursement ${app.amount} ${app.id}`.toLowerCase()
+                    });
+                }
+            });
+        } 
+        else if (role === 'hr') {
+            data.push(
+                { id: 'hr-verifications', title: 'Verifications Queue', subtitle: 'Process employer confirmations', category: 'Pages', path: '/hr/verifications', searchable: 'verifications queue process employer confirmations' },
+                { id: 'hr-employees', title: 'Employees Directory', subtitle: 'View staff payroll records', category: 'Pages', path: '/hr/employees', searchable: 'employees directory staff payroll records names' },
+                { id: 'hr-new-loans', title: 'New Loans Report', subtitle: 'Payroll extraction lists', category: 'Pages', path: '/hr/new-loans', searchable: 'new loans report extraction list payroll' },
+                { id: 'hr-overdue', title: 'Overdue Report', subtitle: 'Track payment gaps', category: 'Pages', path: '/hr/overdue', searchable: 'overdue report track payment gaps arrears' },
+                { id: 'hr-remittances', title: 'Remittance Advice', subtitle: 'Upload verified deduction schedules', category: 'Pages', path: '/hr/remittances', searchable: 'remittance advice upload deduction schedule' },
+                { id: 'hr-reports', title: 'HR Reports', subtitle: 'Performance updates', category: 'Pages', path: '/hr/reports', searchable: 'hr reports updates' }
+            );
+
+            applications.forEach(app => {
+                data.push({
+                    id: `hr-app-${app.id}`,
+                    title: `Verification: ${app.name || 'Applicant'}`,
+                    subtitle: `App ID: ${app.id} • Company: ${app.company}`,
+                    status: app.status,
+                    amount: `R ${app.amount?.toLocaleString()}`,
+                    date: new Date(app.date).toLocaleDateString(),
+                    category: 'Verifications',
+                    path: `/hr/verifications/${app.id}`,
+                    searchable: `${app.id} ${app.name} ${app.company} ${app.status}`.toLowerCase()
+                });
+            });
+        }
+        else if (role === 'admin') {
+            data.push(
+                { id: 'adm-dash', title: 'Admin Dashboard', subtitle: 'System overview parameters', category: 'Pages', path: '/admin/dashboard', searchable: 'dashboard overview parameters system' },
+                { id: 'adm-apps', title: 'Applications Status', subtitle: 'Track application pathways', category: 'Pages', path: '/admin/applications', searchable: 'applications status process pathways' },
+                { id: 'adm-users', title: 'User Management', subtitle: 'Role assignments controls', category: 'Pages', path: '/admin/users', searchable: 'users management role assignments controls permissions' },
+                { id: 'adm-companies', title: 'Company Records', subtitle: 'Affiliate setups management', category: 'Pages', path: '/admin/companies', searchable: 'companies records affiliates setups management' },
+                { id: 'adm-recon', title: 'Reconciliation', subtitle: 'Balance clearing updates', category: 'Pages', path: '/admin/reconciliation', searchable: 'reconciliation balance clearing updates' }
+            );
+
+            applications.forEach(app => {
+                data.push({
+                    id: `adm-app-${app.id}`,
+                    title: `Application ${app.id} (${app.name || 'Applicant'})`,
+                    subtitle: `${app.company} • Amount: R ${app.amount?.toLocaleString()}`,
+                    status: app.status,
+                    amount: `R ${app.amount?.toLocaleString()}`,
+                    date: new Date(app.date).toLocaleDateString(),
+                    category: 'Applications',
+                    path: `/admin/applications/${app.id}`,
+                    searchable: `${app.id} ${app.name} ${app.status} ${app.company} ${app.purpose} process stages`.toLowerCase()
+                });
+            });
+        }
+        else if (role === 'credit') {
+            data.push(
+                { id: 'cred-queue', title: 'Credit Queue', subtitle: 'Pending review assessments', category: 'Pages', path: '/credit/queue', searchable: 'credit queue pending assessment reviews' },
+                { id: 'cred-reviews', title: 'Risk Reviews', subtitle: 'Scoring checks thresholds', category: 'Pages', path: '/credit/reviews', searchable: 'risk reviews scoring checks thresholds outcomes' },
+                { id: 'cred-hist', title: 'Assessment History', subtitle: 'Audited score outputs', category: 'Pages', path: '/credit/history', searchable: 'assessment history audited score outcomes logs' }
+            );
+
+            applications.forEach(app => {
+                data.push({
+                    id: `cred-app-${app.id}`,
+                    title: `Credit Assessment: ${app.name || 'Applicant'}`,
+                    subtitle: `Loan ID: ${app.id} • Risk Tier: ${app.riskTier || 'B'}`,
+                    status: app.status,
+                    amount: `R ${app.amount?.toLocaleString()}`,
+                    date: new Date(app.date).toLocaleDateString(),
+                    category: 'Credit Queue',
+                    path: `/credit/profile/${app.id}`,
+                    searchable: `${app.id} ${app.name} ${app.status} high risk credit score records applicant`.toLowerCase()
+                });
+            });
+        }
+        else if (role === 'finance') {
+            data.push(
+                { id: 'fin-payouts', title: 'Payouts Queue', subtitle: 'EFT disbursement checks', category: 'Pages', path: '/finance/payouts', searchable: 'payouts queue eft disbursement checks release' },
+                { id: 'fin-batch', title: 'Batch Processing', subtitle: 'Payroll remittance allocations', category: 'Pages', path: '/finance/reconciliation', searchable: 'batch processing payroll remittance allocations reconciliation manual figures' },
+                { id: 'fin-settle', title: 'Settlements', subtitle: 'Outstanding pipeline offsets', category: 'Pages', path: '/finance/settlement', searchable: 'settlements pipeline offsets outstanding' },
+                { id: 'fin-reports', title: 'Finance Reports', subtitle: 'Audited balances outputs', category: 'Pages', path: '/finance/reports', searchable: 'finance reports audited balances yields' },
+                { id: 'fin-write', title: 'Write-Offs', subtitle: 'Loss coverage assessments', category: 'Pages', path: '/finance/write-offs', searchable: 'write offs loss coverage assessments bad debts' }
+            );
+
+            applications.forEach(app => {
+                data.push({
+                    id: `fin-app-${app.id}`,
+                    title: `Payment Ref: ${app.paymentRef || app.id}`,
+                    subtitle: `EFT ID: ${app.transactionId || 'N/A'} • Status: ${app.status}`,
+                    status: app.status,
+                    amount: `R ${app.amount?.toLocaleString()}`,
                     date: new Date(app.disbursedAt || app.date).toLocaleDateString(),
-                    category: 'Statements',
-                    path: '/employee/statements',
-                    searchable: `${app.transactionId} Disbursement ${app.amount} ${app.id}`.toLowerCase()
-                });
-            }
-            (app.installments || []).forEach(inst => {
-                t.push({
-                    id: `TX-${inst.id}-${app.id}`,
-                    title: `Repayment: ${app.id}`,
-                    subtitle: `Installment #${inst.id}`,
-                    status: inst.status,
-                    amount: `- R ${inst.amount?.toLocaleString()}`,
-                    date: new Date(inst.dueDate).toLocaleDateString(),
-                    category: 'Statements',
-                    path: '/employee/statements',
-                    searchable: `${app.id} Repayment ${inst.amount} ${inst.status} Installment`.toLowerCase()
+                    category: 'Transactions',
+                    path: `/finance/payouts`,
+                    searchable: `${app.id} ${app.transactionId} ${app.paymentRef} payout transaction references`.toLowerCase()
                 });
             });
-            return t;
-        });
+        }
+        else if (role === 'management') {
+            data.push(
+                { id: 'mgmt-invest', title: 'Investor Center', subtitle: 'Governance ROI analytics', category: 'Pages', path: '/management/investor', searchable: 'investor center governance roi analytics metrics presentation' },
+                { id: 'mgmt-age', title: 'Age Analysis', subtitle: 'Arrears thresholds distributions', category: 'Pages', path: '/management/age-analysis', searchable: 'age analysis arrears thresholds distributions 30 60 90 120' },
+                { id: 'mgmt-rep', title: 'Portfolio Reports', subtitle: 'Yield breakdowns exports', category: 'Pages', path: '/management/reports', searchable: 'portfolio reports yield breakdowns exports kpi metrics' },
+                { id: 'mgmt-back', title: 'Backup Logs', subtitle: 'System preservation checkpoints', category: 'Pages', path: '/management/backups', searchable: 'backup logs preservation checkpoints system' }
+            );
 
-        // 3. Documents
-        const docs = [];
-        // Mock user docs as seen in DocumentsCenter.jsx
-        const userDocuments = [
-            { id: 'doc-1', name: 'ID Document.pdf', type: 'Identification', date: '2024-04-10', status: 'Verified' },
-            { id: 'doc-2', name: 'Latest_Payslip.pdf', type: 'Income Proof', date: '2024-04-12', status: 'Verified' },
-            { id: 'doc-3', name: 'Bank_Statement_3mo.pdf', type: 'Financial Proof', date: '2024-04-13', status: 'Pending' },
-        ];
-        
-        userDocuments.forEach(doc => {
-            docs.push({
-                id: doc.id,
-                title: doc.name,
-                subtitle: doc.type,
-                status: doc.status,
-                date: doc.date,
-                category: 'Documents',
-                path: '/employee/documents',
-                searchable: `${doc.name} ${doc.type} ${doc.status} ${doc.date}`.toLowerCase()
+            data.push({
+                id: 'mgmt-kpi',
+                title: 'Executive Performance KPI',
+                subtitle: 'Real-time analytics yields',
+                status: 'Active',
+                category: 'KPI Metrics',
+                path: '/management/investor',
+                searchable: 'revenue reports metrics analytics kpi yield graphs charts'.toLowerCase()
             });
-        });
+        }
+        else if (role === 'recovery') {
+            data.push(
+                { id: 'rec-list', title: 'Recovery Cases', subtitle: 'Active delinquency queues', category: 'Pages', path: '/recovery/list', searchable: 'recovery cases active delinquency queues accounts' },
+                { id: 'rec-col', title: 'Collections History', subtitle: 'PTP enforcement milestones', category: 'Pages', path: '/recovery/collections', searchable: 'collections history ptp enforcement milestones tracking' },
+                { id: 'rec-track', title: 'Payment Tracking', subtitle: 'Pipeline debt collections', category: 'Pages', path: '/recovery/tracking', searchable: 'payment tracking pipeline debt collections arrears cases' }
+            );
 
-        const letters = [
-            { title: 'Settlement Letter', type: 'Settlement' },
-            { title: 'Paid-Up Letter', type: 'Paid-Up' },
-            { title: 'Loan Confirmation', type: 'Confirmation' },
-        ];
-        letters.forEach((l, idx) => {
-            docs.push({
-                id: `letter-${idx}`,
-                title: l.title,
-                subtitle: 'Official Generated Letter',
-                status: 'Available',
-                date: new Date().toLocaleDateString(),
-                category: 'Documents',
-                path: '/employee/documents',
-                searchable: `${l.title} Official Letter`.toLowerCase()
+            applications.forEach(app => {
+                data.push({
+                    id: `rec-app-${app.id}`,
+                    title: `Delinquent: ${app.name || 'Borrower'}`,
+                    subtitle: `Loan ID: ${app.id} • Arrears: ${app.recoveryStatus}`,
+                    status: app.status,
+                    amount: `R ${app.outstandingAmount?.toLocaleString()}`,
+                    date: new Date(app.date).toLocaleDateString(),
+                    category: 'Arrears Accounts',
+                    path: `/recovery/case/${app.id}`,
+                    searchable: `${app.id} ${app.name} arrears write off transfer borrower tracking`.toLowerCase()
+                });
             });
-        });
+        }
 
-        return [...apps, ...txs, ...docs];
+        return data;
     }, [applications, user]);
 
     // Handle Search Logic with Debounce
@@ -158,8 +245,8 @@ const GlobalSearch = () => {
 
             // Flatten for easier index management
             const flattened = [];
-            ['Applications', 'Statements', 'Documents'].forEach(cat => {
-                if (grouped[cat]) flattened.push(...grouped[cat]);
+            Object.keys(grouped).forEach(cat => {
+                flattened.push(...grouped[cat]);
             });
 
             setResults(flattened);
@@ -225,7 +312,7 @@ const GlobalSearch = () => {
         <div className="relative flex-1 max-w-md min-w-0" ref={searchRef}>
             {/* Search Input Area (Matches existing UI) */}
             <div className={cn(
-                "hidden lg:flex items-center gap-2 px-6 py-2.5 bg-slate-900 border border-slate-800 rounded-full text-slate-500 group transition-all",
+                "flex items-center gap-2 px-6 py-2.5 bg-slate-900 border border-slate-800 rounded-full text-slate-500 group transition-all",
                 isOpen && "border-blue-500/50 shadow-lg shadow-blue-500/5"
             )}>
                 {loading ? (
@@ -263,7 +350,7 @@ const GlobalSearch = () => {
                             <div className="p-4">
                                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-2">Recent Searches</h3>
                                 <div className="space-y-1">
-                                    {recentSearches.map((item) => (
+                                    {recentSearches.filter(r => r.path.startsWith(`/${user?.role?.toLowerCase() || 'employee'}`)).map((item) => (
                                         <button
                                             key={item.id}
                                             onClick={() => handleSelect(item)}
@@ -296,7 +383,7 @@ const GlobalSearch = () => {
 
                         {query && results.length > 0 && (
                             <div className="space-y-6 p-2">
-                                {['Applications', 'Statements', 'Documents'].map(category => {
+                                {Array.from(new Set(results.map(r => r.category))).map(category => {
                                     const categoryResults = results.filter(r => r.category === category);
                                     if (categoryResults.length === 0) return null;
 
@@ -318,14 +405,14 @@ const GlobalSearch = () => {
                                                         >
                                                             <div className={cn(
                                                                 "w-12 h-12 rounded-xl flex items-center justify-center transition-all",
+                                                                category === 'Pages' ? "bg-blue-50 text-blue-600" :
                                                                 category === 'Applications' ? "bg-amber-50 text-amber-600" :
-                                                                category === 'Statements' ? "bg-emerald-50 text-emerald-600" :
-                                                                "bg-blue-50 text-blue-600",
+                                                                "bg-emerald-50 text-emerald-600",
                                                                 isSelected && "scale-110 shadow-md"
                                                             )}>
-                                                                {category === 'Applications' ? <FileText className="w-5 h-5" /> :
-                                                                 category === 'Statements' ? <Receipt className="w-5 h-5" /> :
-                                                                 <FileText className="w-5 h-5" />}
+                                                                {category === 'Pages' ? <ChevronRight className="w-5 h-5" /> :
+                                                                 category === 'Applications' ? <FileText className="w-5 h-5" /> :
+                                                                 <Receipt className="w-5 h-5" />}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
                                                                 <div className="flex items-center justify-between gap-2">

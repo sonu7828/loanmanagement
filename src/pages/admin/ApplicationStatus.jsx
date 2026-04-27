@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLoans, STATUSES, LIFECYCLE_STATUSES, LIFECYCLE_ACTIONS } from '../../context/LoanContext';
 import { SectionHeader, Badge } from '../../components/ui/Shared';
 
-const ApplicationsPipeline = () => {
+const ApplicationStatus = () => {
     const { applications, transitionLoanLifecycle } = useLoans();
     const [searchTerm, setSearchTerm] = useState('');
     const [showFilters, setShowFilters] = useState(false);
@@ -261,5 +261,5 @@ const ApplicationsPipeline = () => {
     );
 };
 
-export default ApplicationsPipeline;
+export default ApplicationStatus;
 

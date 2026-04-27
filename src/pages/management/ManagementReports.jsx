@@ -70,7 +70,7 @@ const ManagementReports = () => {
                     title="Portfolio Governance Reports"
                     description="Comprehensive forensic and social-impact reporting for internal and regulatory audit."
                 />
-                
+
                 <div className="flex p-1 bg-slate-950 rounded-2xl border border-slate-800">
                     {[
                         { id: 'portfolio', label: 'Portfolio', icon: BarChart3 },
@@ -80,9 +80,8 @@ const ManagementReports = () => {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                                activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:text-slate-300'
-                            }`}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:text-slate-300'
+                                }`}
                         >
                             <tab.icon className="w-4 h-4" />
                             {tab.label}
@@ -190,8 +189,8 @@ const ManagementReports = () => {
                         <div className="p-8 bg-blue-600/5 border border-blue-500/10 rounded-[32px] space-y-6">
                             <div className="flex justify-between items-end">
                                 <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em]">Target Metric</p>
-                                    <p className="text-4xl font-display font-black text-white italic tracking-tighter">84.2%</p>
+                                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">Target Metric</p>
+                                    <p className="text-4xl font-display font-black text-slate-900 italic tracking-tighter">84.2%</p>
                                 </div>
                                 <Badge variant="success">ESG High Performing</Badge>
                             </div>
@@ -222,15 +221,15 @@ const ManagementReports = () => {
 };
 
 const ReportCard = ({ title, icon: Icon, children }) => (
-    <div className="glass p-10 rounded-[48px] border border-slate-800/50 space-y-8 shadow-2xl group hover:border-slate-700 transition-all">
+    <div className="glass p-10 rounded-[48px] border border-slate-200 space-y-8 shadow-2xl bg-white">
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-                <div className="p-4 bg-slate-950 rounded-[24px] border border-slate-800 text-blue-500 group-hover:scale-110 transition-transform shadow-inner">
+                <div className="p-4 bg-white rounded-[24px] border border-slate-300 text-blue-600 shadow-sm">
                     <Icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tight">{title}</h3>
+                <h3 className="text-xl font-display font-black !text-black italic uppercase tracking-tight">{title}</h3>
             </div>
-            <button className="p-3 bg-slate-800 text-slate-400 rounded-2xl hover:text-white transition-all">
+            <button className="p-3 bg-white border border-slate-300 text-slate-600 rounded-2xl hover:bg-slate-50 transition-all shadow-sm">
                 <Printer className="w-4 h-4" />
             </button>
         </div>
@@ -239,21 +238,21 @@ const ReportCard = ({ title, icon: Icon, children }) => (
 );
 
 const MiniMetric = ({ label, value, icon: Icon, trend, sub, variant }) => (
-    <div className={`glass p-8 rounded-[32px] border border-slate-800/50 space-y-4 group hover:border-slate-700 transition-all ${variant === 'success' ? 'bg-emerald-600/5' : ''}`}>
+    <div className={`glass p-8 rounded-[32px] border border-slate-200 space-y-4 bg-white shadow-md`}>
         <div className="flex items-center justify-between">
-            <div className={`p-3 rounded-2xl bg-slate-950 border border-slate-800 ${variant === 'success' ? 'text-emerald-500' : 'text-blue-400'}`}>
+            <div className={`p-3 rounded-2xl bg-white border border-slate-300 text-blue-600 shadow-sm`}>
                 <Icon className="w-5 h-5" />
             </div>
             {trend && (
-                <span className={`text-[10px] font-black px-2 py-1 rounded-lg ${trend.startsWith('+') ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg bg-white border border-slate-300 !text-black shadow-sm`}>
                     {trend}
                 </span>
             )}
-            {sub && <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">{sub}</span>}
+            {sub && <span className="text-[10px] font-black !text-black uppercase tracking-widest">{sub}</span>}
         </div>
         <div>
-            <p className="text-3xl font-display font-black text-white italic tracking-tighter">{value}</p>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-1">{label}</p>
+            <p className="text-3xl font-display font-black !text-black italic tracking-tighter">{value}</p>
+            <p className="text-[10px] font-black !text-black uppercase tracking-[0.2em] mt-1">{label}</p>
         </div>
     </div>
 );

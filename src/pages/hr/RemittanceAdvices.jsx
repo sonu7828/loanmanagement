@@ -19,7 +19,11 @@ const RemittanceAdvices = () => {
     const { applications } = useLoans();
     const [selectedCompany, setSelectedCompany] = useState('ALL');
     const [frequency, setFrequency] = useState('Monthly');
-    const [dateRange, setDateRange] = useState('2024-04');
+    
+    // Default to current month dynamically
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const [dateRange, setDateRange] = useState(currentMonth);
+    
     const [isExporting, setIsExporting] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [toast, setToast] = useState(null);
@@ -35,9 +39,15 @@ const RemittanceAdvices = () => {
         return applications.filter(app => {
             const matchesCompany = selectedCompany === 'ALL' || app.company === selectedCompany;
             const isDisbursed = app.status === STATUSES.DISBURSED || app.status === STATUSES.ACTIVE;
-            return matchesCompany && isDisbursed;
+            
+            // Derive a mock frequency based on company name for demo purposes
+            const companyLen = app.company.length;
+            const mockFreq = companyLen % 3 === 0 ? 'Weekly' : (companyLen % 2 === 0 ? 'Fortnightly' : 'Monthly');
+            const matchesFrequency = mockFreq === frequency;
+
+            return matchesCompany && isDisbursed && matchesFrequency;
         });
-    }, [applications, selectedCompany]);
+    }, [applications, selectedCompany, frequency]);
 
     const totalDeductions = filteredEmployees.reduce((sum, emp) => {
         // Mock deduction: 10% of amount / 12 as a sample

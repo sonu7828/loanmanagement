@@ -49,7 +49,7 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <div 
-          className="fixed inset-0 z-[99999] overflow-y-auto overscroll-contain pointer-events-none"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-10 pointer-events-none"
           role="dialog"
           aria-modal="true"
         >
@@ -58,30 +58,29 @@ const Modal = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-0 bg-slate-900/40 backdrop-blur-sm pointer-events-auto"
+            className="fixed inset-0 z-0 bg-slate-900/50 backdrop-blur-sm pointer-events-auto"
             onClick={preventBackdropClick ? undefined : onClose}
             aria-hidden="true"
           />
 
-          {/* Modal Container (Centering Wrapper) */}
-          <div className="min-h-full flex flex-col p-4 sm:p-10 pointer-events-none">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className={cn(
-                'relative z-10 w-full pointer-events-auto m-auto',
-                isCompact ? 'h-auto' : 'max-h-[85dvh] flex flex-col',
-                'bg-white rounded-[24px] sm:rounded-[32px] border border-slate-200 shadow-2xl',
-                maxWidth
-              )}
-              onClick={(e) => e.stopPropagation()}
-            >
+          {/* Modal Card */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className={cn(
+              'relative z-10 w-full pointer-events-auto',
+              isCompact ? 'h-auto' : 'max-h-[85dvh] flex flex-col',
+              'bg-white rounded-[24px] sm:rounded-[32px] border border-slate-200 shadow-2xl',
+              maxWidth
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
               {/* Header */}
               <div className="px-5 py-3 sm:px-8 sm:py-5 border-b border-slate-100 flex items-center justify-between gap-4 bg-white rounded-t-[24px] sm:rounded-t-[32px] flex-shrink-0">
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base sm:text-lg font-display font-black text-slate-100 truncate tracking-tight uppercase tracking-wider">{title}</h3>
+                  <h3 className="text-base sm:text-lg font-display font-black !text-black truncate tracking-tight uppercase tracking-wider">{title}</h3>
                 </div>
                 <button 
                   onClick={onClose}
@@ -108,7 +107,6 @@ const Modal = ({
                 </div>
               )}
             </motion.div>
-          </div>
         </div>
       )}
     </AnimatePresence>

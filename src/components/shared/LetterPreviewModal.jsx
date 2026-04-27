@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Download, Mail, CheckCircle2, Loader2, FileText, Send } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 
@@ -14,6 +15,15 @@ const LetterPreviewModal = ({
     const [emailStatus, setEmailStatus] = useState('idle'); // idle, sending, success
     const [additionalEmail, setAdditionalEmail] = useState('');
     const contentRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = 'unset';
+            };
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -50,16 +60,16 @@ const LetterPreviewModal = ({
         }, 1500);
     };
 
-    return (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+    return createPortal(
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 pointer-events-none">
             {/* Backdrop */}
             <div 
-                className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300"
+                className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300 pointer-events-auto"
                 onClick={onClose}
             />
             
             {/* Modal Container */}
-            <div className="relative w-full max-w-4xl max-h-[90vh] glass rounded-[32px] md:rounded-[48px] border border-slate-800/50 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="relative w-full max-w-4xl max-h-[90vh] glass rounded-[32px] md:rounded-[48px] border border-slate-800/50 shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 pointer-events-auto">
                 
                 {/* Header */}
                 <div className="p-6 md:p-8 border-b border-slate-800/50 flex items-center justify-between bg-slate-900/40">
@@ -145,7 +155,8 @@ const LetterPreviewModal = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

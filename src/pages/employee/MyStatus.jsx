@@ -171,7 +171,7 @@ const MyStatus = () => {
                                         <p className={cn(
                                             "text-xs lg:text-sm mt-1 leading-relaxed",
                                             stepStatus === 'completed' ? "text-slate-600" :
-                                                stepStatus === 'current' ? "text-slate-800 font-medium" :
+                                                stepStatus === 'current' ? "!text-black font-medium" :
                                                     stepStatus === 'failed' ? "text-red-600/80" :
                                                         "text-slate-400 font-medium"
                                         )}>
@@ -224,7 +224,7 @@ const MyStatus = () => {
                             <div>
                                 <p className="text-sm font-bold text-emerald-400 uppercase tracking-wider">Funds Disbursed</p>
                                 <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-                                    Your loan of <span className="font-bold text-white">R {latestApp.amount?.toLocaleString()}</span> was successfully paid out on <span className="font-bold text-white">{latestApp.disbursementDate ? new Date(latestApp.disbursementDate).toLocaleDateString() : new Date().toLocaleDateString()}</span>.
+                                    Your loan of <span className="font-bold text-slate-100">R {latestApp.amount?.toLocaleString()}</span> was successfully paid out on <span className="font-bold text-slate-100">{latestApp.disbursementDate ? new Date(latestApp.disbursementDate).toLocaleDateString() : new Date().toLocaleDateString()}</span>.
                                 </p>
                             </div>
                         </div>

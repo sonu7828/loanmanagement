@@ -22,7 +22,7 @@ import Statements from './pages/employee/Statements';
 import VerificationQueue from './pages/hr/VerificationQueue';
 import CreditQueue from './pages/credit/CreditQueue';
 import PayoutQueue from './pages/finance/PayoutQueue';
-import ApplicationsPipeline from './pages/admin/ApplicationsPipeline';
+import ApplicationStatus from './pages/admin/ApplicationStatus';
 import ManagementReports from './pages/management/ManagementReports';
 import RecoveryList from './pages/recovery/RecoveryList';
 import HistoryPage from './pages/shared/HistoryPage';
@@ -88,8 +88,8 @@ function App() {
               <Routes>
                 <Route index element={<Navigate to="dashboard" replace />} />
                 <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="applications" element={<ApplicationsPipeline />} />
-                <Route path="status" element={<ApplicationsPipeline />} />
+                <Route path="applications" element={<ApplicationStatus />} />
+                <Route path="status" element={<ApplicationStatus />} />
                 <Route path="payments" element={<PaymentManagement />} />
                 <Route path="controls" element={<AdminControls />} />
                 <Route path="applications/:id" element={<AdminApplicationDetail />} />

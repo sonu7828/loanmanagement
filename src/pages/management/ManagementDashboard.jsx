@@ -67,34 +67,35 @@ const ManagementDashboard = () => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       {/* Global Executive Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 glass p-6 rounded-[32px] border border-slate-800/50 shadow-xl">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 glass p-6 rounded-[32px] border border-slate-200 shadow-xl bg-white">
         <div className="space-y-1">
-          <h1 className="text-2xl font-display font-black text-white tracking-tight italic uppercase">Executive Overview</h1>
-          <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Global Portfolio Intelligence & Real-time Metrics</p>
+          <h1 className="text-2xl font-display font-black !text-black tracking-tight italic uppercase">Executive Overview</h1>
+          <p className="text-xs !text-black font-bold uppercase tracking-widest">Global Portfolio Intelligence & Real-time Metrics</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-                <div className="p-2 bg-blue-600/10 rounded-xl text-blue-400">
+            <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-300 shadow-sm relative">
+                <div className="p-2 bg-blue-600/10 rounded-xl text-blue-600">
                     <Building2 className="w-4 h-4" />
                 </div>
                 <select 
                     value={selectedCompany}
                     onChange={(e) => setSelectedCompany(e.target.value)}
-                    className="bg-transparent border-none text-xs font-black text-slate-300 focus:ring-0 appearance-none pr-8 uppercase tracking-widest cursor-pointer"
+                    className="bg-transparent border-none text-xs font-black !text-black focus:ring-0 appearance-none pr-10 uppercase tracking-widest cursor-pointer"
                 >
                     {companies.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
+                <ChevronDown className="w-4 h-4 !text-black absolute right-3 pointer-events-none" />
             </div>
 
-            <div className="flex items-center gap-3 bg-slate-950 p-2 rounded-2xl border border-slate-800">
-                <div className="p-2 bg-amber-600/10 rounded-xl text-amber-400">
+            <div className="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-300 shadow-sm relative">
+                <div className="p-2 bg-amber-600/10 rounded-xl text-amber-600">
                     <Calendar className="w-4 h-4" />
                 </div>
                 <select 
                     value={dateRange}
                     onChange={(e) => setDateRange(e.target.value)}
-                    className="bg-transparent border-none text-xs font-black text-slate-300 focus:ring-0 appearance-none pr-8 uppercase tracking-widest cursor-pointer"
+                    className="bg-transparent border-none text-xs font-black !text-black focus:ring-0 appearance-none pr-10 uppercase tracking-widest cursor-pointer"
                 >
                     <option value="today">Today</option>
                     <option value="week">This Week</option>
@@ -103,10 +104,11 @@ const ManagementDashboard = () => {
                     <option value="year">FY 2026</option>
                     <option value="custom">Custom Range</option>
                 </select>
+                <ChevronDown className="w-4 h-4 !text-black absolute right-3 pointer-events-none" />
             </div>
 
-            <button className="p-4 bg-white text-slate-900 rounded-2xl hover:scale-105 transition-all shadow-xl">
-                <Download className="w-4 h-4" />
+            <button className="p-4 bg-white border border-slate-200 text-slate-900 rounded-2xl hover:scale-105 transition-all shadow-md flex items-center justify-center">
+                <Download className="w-4 h-4 !text-black" />
             </button>
         </div>
       </div>
@@ -119,13 +121,13 @@ const ManagementDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Expenditure Chart */}
-        <div className="glass p-10 rounded-[48px] border border-slate-800/50 space-y-8 shadow-2xl relative overflow-hidden group">
+        <div className="glass p-10 rounded-[48px] border border-slate-200 space-y-8 shadow-2xl relative overflow-hidden group bg-white">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] -mr-32 -mt-32 transition-all group-hover:bg-blue-600/10" />
           
           <div className="flex items-center justify-between relative z-10">
             <div className="space-y-1">
-                <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tight">Disbursement Velocity</h3>
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Monthly Growth Index</p>
+                <h3 className="text-xl font-display font-black !text-black italic uppercase tracking-tight">Disbursement Velocity</h3>
+                <p className="text-[10px] font-black !text-black uppercase tracking-[0.2em]">Monthly Growth Index</p>
             </div>
             <Badge variant="primary">Target: +15%</Badge>
           </div>
@@ -139,12 +141,12 @@ const ManagementDashboard = () => {
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis dataKey="name" stroke="#64748b" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} />
                 <YAxis stroke="#64748b" fontSize={10} fontWeight="bold" tickLine={false} axisLine={false} tickFormatter={(value) => `R${(value / 1000).toFixed(0)}k`} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '24px', border: '1px solid rgba(59,130,246,0.2)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
-                  itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' }}
+                  itemStyle={{ color: '#000000', fontWeight: 'bold' }}
                   formatter={(value) => [`R ${value.toLocaleString()}`, 'Growth']}
                 />
                 <Area type="monotone" dataKey="amount" stroke="#3b82f6" fillOpacity={1} fill="url(#colorAmount)" strokeWidth={4} />
@@ -154,13 +156,13 @@ const ManagementDashboard = () => {
         </div>
 
         {/* Portfolio Diversification */}
-        <div className="glass p-10 rounded-[48px] border border-slate-800/50 space-y-8 shadow-2xl relative overflow-hidden group">
+        <div className="glass p-10 rounded-[48px] border border-slate-200 space-y-8 shadow-2xl relative overflow-hidden group bg-white">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[100px] -mr-32 -mt-32 transition-all group-hover:bg-emerald-600/10" />
           
           <div className="flex items-center justify-between relative z-10">
             <div className="space-y-1">
-                <h3 className="text-xl font-display font-black text-white italic uppercase tracking-tight">Portfolio Allocation</h3>
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Risk Segment Distribution</p>
+                <h3 className="text-xl font-display font-black !text-black italic uppercase tracking-tight">Portfolio Allocation</h3>
+                <p className="text-[10px] font-black !text-black uppercase tracking-[0.2em]">Risk Segment Distribution</p>
             </div>
             <Badge variant="success">Optimized</Badge>
           </div>
@@ -193,9 +195,9 @@ const ManagementDashboard = () => {
                 <div key={entry.name} className="flex items-center justify-between group/legend">
                   <div className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                    <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider group-hover/legend:text-slate-200 transition-colors">{entry.name}</span>
+                    <span className="text-[10px] !text-black font-black uppercase tracking-wider group-hover/legend:text-slate-800 transition-colors">{entry.name}</span>
                   </div>
-                  <span className="text-xs font-black text-slate-200">{entry.value}</span>
+                  <span className="text-xs font-black !text-black">{entry.value}</span>
                 </div>
               ))}
             </div>

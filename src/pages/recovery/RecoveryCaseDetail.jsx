@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
     Phone, 
@@ -755,12 +756,19 @@ const InfoBar = ({ label, value, danger }) => (
     </div>
 );
 
-const Modal = ({ title, onClose, children }) => (
-    <div className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain">
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose} aria-hidden />
-        <div className="relative z-10 flex min-h-full items-center justify-center p-4 sm:p-6 md:p-8 pointer-events-none">
+const Modal = ({ title, onClose, children }) => {
+    React.useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8 pointer-events-none">
+            <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-300 pointer-events-auto" onClick={onClose} aria-hidden />
             <div
-                className="relative w-full max-w-xl max-h-[min(90dvh,90vh)] flex flex-col glass rounded-[28px] sm:rounded-[40px] border border-slate-800/50 overflow-hidden shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-5 duration-300 my-auto pointer-events-auto"
+                className="relative z-10 w-full max-w-xl max-h-[90vh] flex flex-col glass rounded-[28px] sm:rounded-[40px] border border-slate-800/50 overflow-hidden shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-5 duration-300 pointer-events-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="p-5 sm:p-8 md:p-10 border-b border-slate-800/50 flex items-center justify-between gap-3 bg-white/[0.02] flex-shrink-0 min-w-0">
@@ -773,8 +781,9 @@ const Modal = ({ title, onClose, children }) => (
                     {children}
                 </div>
             </div>
-        </div>
-    </div>
-);
+        </div>,
+        document.body
+    );
+};
 
 export default RecoveryCaseDetail;
